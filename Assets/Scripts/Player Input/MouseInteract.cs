@@ -13,9 +13,9 @@ public class MouseInteract : MonoBehaviour
     {
         get => hoveredTile != null;
     }
-    private bool HoverSelected
+    private bool SelectExist
     {
-        get => selectedTile != null && hoveredTile.position == selectedTile.position;
+        get => selectedTile != null;
     }
 
     private void Update()
@@ -39,14 +39,14 @@ public class MouseInteract : MonoBehaviour
 
             if (!HoverExist || hoveredTile.position != tile.position)
             {
-                UnhoverTile();
+                UnhighlightTile();
                 hoveredTile = tile;
-                HoverTile();
+                HighlightTile();
             }
         }
         else
         {
-            UnhoverTile();
+            UnhighlightTile();
             hoveredTile = null;
         }
     }
@@ -62,15 +62,15 @@ public class MouseInteract : MonoBehaviour
     #endregion
 
     #region Operations
-    private void HoverTile()
+    private void HighlightTile()
     {
         hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_HIGHLIGHT);
     }
-    private void UnhoverTile()
+    private void UnhighlightTile()
     {
         if (HoverExist)
         {
-            if (HoverSelected)
+            if (SelectExist && hoveredTile.position == selectedTile.position)
                 hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
             else
                 hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
@@ -82,7 +82,7 @@ public class MouseInteract : MonoBehaviour
     }
     private void DeselectTile()
     {
-        if (selectedTile != null)
+        if (SelectExist)
             selectedTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
     }
     #endregion

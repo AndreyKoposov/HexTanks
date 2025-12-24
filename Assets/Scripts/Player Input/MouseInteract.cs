@@ -4,51 +4,59 @@ public class MouseInteract : MonoBehaviour
 {
     public static readonly string L_GRID = "Grid";
     public static readonly string L_HIGHLIGHT = "Highlight";
+    public static readonly string L_SELECT = "Select";
 
-    private HexTile previousTile;
+    private HexTile hoveredTile;
+    private HexTile selectedTile;
 
-    private bool HasHover
+    private bool HoverExist
     {
-        get => previousTile != null;
+        get => hoveredTile != null;
+    }
+    private bool HoverSelected
+    {
+        get => selectedTile != null && hoveredTile.position == selectedTile.position;
     }
 
     private void Update()
     {
         CheckHover();
         CheckSelect();
+
+        if (HoverExist && Input.GetKeyDown(KeyCode.C))
+            Game.World.CreateUnit(hoveredTile.position, Team.PLAYER);
+        if (HoverExist && Input.GetKeyDown(KeyCode.X))
+            Game.World.DestroyUnit(hoveredTile.position);
     }
 
     #region Main Logic
     private void CheckHover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT)))
+        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT, L_SELECT)))
         {
            var tile = hit.collider.gameObject.GetComponent<HexTile>();
 
-            if (!HasHover || previousTile.position != tile.position)
+            if (!HoverExist || hoveredTile.position != tile.position)
             {
                 UnhoverTile();
-                previousTile = tile;
+                hoveredTile = tile;
                 HoverTile();
             }
         }
         else
         {
             UnhoverTile();
-            previousTile = null;
+            hoveredTile = null;
         }
     }
     private void CheckSelect()
     {
-        if (HasHover && Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && HoverExist && hoveredTile.HasUnit)
         {
-            Game.World.CreateUnit(previousTile.position, Team.PLAYER);
-        }
-
-        if (HasHover && Input.GetMouseButtonDown(1))
-        {
-            Game.World.DestroyUnit(previousTile.position);
+            DeselectTile();
+            selectedTile = hoveredTile;
+            SelectTile();
         }
     }
     #endregion
@@ -56,12 +64,26 @@ public class MouseInteract : MonoBehaviour
     #region Operations
     private void HoverTile()
     {
-        previousTile.gameObject.layer = LayerMask.NameToLayer(L_HIGHLIGHT);
+        hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_HIGHLIGHT);
     }
     private void UnhoverTile()
     {
-        if (HasHover)
-            previousTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+        if (HoverExist)
+        {
+            if (HoverSelected)
+                hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+            else
+                hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+        }
+    }
+    private void SelectTile()
+    {
+        selectedTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+    }
+    private void DeselectTile()
+    {
+        if (selectedTile != null)
+            selectedTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
     }
     #endregion
 }

@@ -523,6 +523,6 @@ MonoBehaviour:
   hp: 5
   damage: 2
   attackDistance: 2
-  movementDistance: 3
+  movementDistance: 2
   team: 0
   position: {x: 0, y: 0, z: 0}

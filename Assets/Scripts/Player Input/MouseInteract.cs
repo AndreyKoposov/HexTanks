@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class MouseInteract : MonoBehaviour
@@ -8,6 +9,7 @@ public class MouseInteract : MonoBehaviour
 
     private HexTile hoveredTile;
     private HexTile selectedTile;
+    private List<HexTile> validMoves = new();
 
     private bool HoverExist
     {
@@ -24,9 +26,9 @@ public class MouseInteract : MonoBehaviour
         CheckSelect();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnit(hoveredTile.position, Team.PLAYER);
+            Game.World.CreateUnitAt(hoveredTile.position, Team.PLAYER);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
-            Game.World.DestroyUnit(hoveredTile.position);
+            Game.World.DestroyUnitAt(hoveredTile.position);
     }
 
     #region Main Logic
@@ -42,6 +44,8 @@ public class MouseInteract : MonoBehaviour
                 UnhighlightTile();
                 hoveredTile = tile;
                 HighlightTile();
+
+                Debug.Log(hoveredTile.position);
             }
         }
         else
@@ -57,6 +61,12 @@ public class MouseInteract : MonoBehaviour
             DeselectTile();
             selectedTile = hoveredTile;
             SelectTile();
+        }
+
+        if (SelectExist && !selectedTile.HasUnit)
+        {
+            DeselectTile();
+            selectedTile = null;
         }
     }
     #endregion
@@ -79,11 +89,32 @@ public class MouseInteract : MonoBehaviour
     private void SelectTile()
     {
         selectedTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+
+        GetValidMoves();
+        SelectValidMoves();
     }
     private void DeselectTile()
     {
         if (SelectExist)
+        {
             selectedTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+            DeselectValidMoves();
+        }
+    }
+    private void GetValidMoves()
+    {
+        validMoves = Game.World.GetValidMovesForUnit(selectedTile.position);
+        Debug.Log(validMoves.Count);
+    }
+    private void SelectValidMoves()
+    {
+        foreach (var move in validMoves)
+            move.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+    }
+    private void DeselectValidMoves()
+    {
+        foreach (var move in validMoves)
+            move.gameObject.layer = LayerMask.NameToLayer(L_GRID);
     }
     #endregion
 }

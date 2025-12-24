@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -25,7 +26,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void CreateUnit(Vector3Int position, Team team)
+    public void CreateUnitAt(Vector3Int position, Team team)
     {
         HexTile tile = map[position];
 
@@ -43,9 +44,52 @@ public class GridManager : MonoBehaviour
         units[position] = unit;
     }
 
-    public void DestroyUnit(Vector3Int position)
+    public void DestroyUnitAt(Vector3Int position)
     {
         if(map[position].HasUnit)
             Destroy(units[position].gameObject);
+    }
+
+    public List<HexTile> GetValidMovesForUnit(Vector3Int position)
+    {
+        Tank unit = units[position];
+
+        List<HexTile> result = new();
+        HashSet <Vector3Int> origin = new() { position };
+        HashSet<Vector3Int> positions = GetRing(origin, unit.movementDistance);
+
+        foreach (Vector3Int pos in positions)
+            result.Add(map[pos]);
+
+        return result;
+    }
+
+    private HashSet<Vector3Int> GetRing(HashSet<Vector3Int> prevRing, int iter)
+    {
+        if (iter <= 0)
+            return prevRing;
+
+        HashSet<Vector3Int> res = new();
+        foreach (var pos in prevRing)
+            res.UnionWith(GetNeighbours(pos));
+
+        prevRing.UnionWith(GetRing(res, iter - 1));
+
+        return prevRing;
+    }
+
+    private HashSet<Vector3Int> GetNeighbours(Vector3Int position)
+    {
+        int even = Mathf.Abs(position.y) % 2;
+
+        return new()
+        {
+            position + new Vector3Int(1, 0,  0),   // Вправо
+            position + new Vector3Int(0 + even, 1, 0),   // Вправо-вверх
+            position + new Vector3Int(-1 + even, 1, 0),   // Влево-вверх
+            position + new Vector3Int(-1, 0, 0),   // Влево
+            position + new Vector3Int(-1 + even, -1, 0),   // Влево-вниз
+            position + new Vector3Int(0 + even, -1, 0)    // Вправо-вниз
+        };
     }
 }

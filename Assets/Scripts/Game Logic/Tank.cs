@@ -14,5 +14,6 @@ public class Tank : MonoBehaviour
     {
         team = unitTeam;
         position = unitPosition;
+        transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
     }
 }

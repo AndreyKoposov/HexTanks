@@ -10,10 +10,7 @@ public class Game : MonoBehaviour
         if (Instance != null && this != Instance)
             Destroy(gameObject);
         else
-        {
             Instance = this;
-            DontDestroyOnLoad(Instance);
-        }
     }
     #endregion
 

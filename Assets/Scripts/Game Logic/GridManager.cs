@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -28,15 +27,25 @@ public class GridManager : MonoBehaviour
 
     public void CreateUnit(Vector3Int position, Team team)
     {
-        var unit = Instantiate(prefabs[0], map[position].transform).GetComponent<Tank>();
+        HexTile tile = map[position];
+
+        if (tile.HasUnit) return;
+        if (tile.isObstacle) return;
+
+        var unit = Instantiate(prefabs[0], 
+                               Vector3.zero, 
+                               Quaternion.identity, 
+                               map[position].transform).GetComponent<Tank>();
 
         unit.Setup(team, position);
 
+        map[position].tank = unit;
         units[position] = unit;
     }
 
     public void DestroyUnit(Vector3Int position)
     {
-        Destroy(units[position].gameObject);
+        if(map[position].HasUnit)
+            Destroy(units[position].gameObject);
     }
 }

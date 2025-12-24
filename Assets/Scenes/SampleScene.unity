@@ -775,6 +775,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 452773956}
+  prefabs:
+  - {fileID: 8495432209897992610, guid: 85ea1dd8fa44f324dac626a695aebb68, type: 3}
 --- !u!1001 &271811403
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4274,6 +4276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 839090dbc9f4020468c4b2a108878c57, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 3
 --- !u!114 &1552916889
 MonoBehaviour:
   m_ObjectHideFlags: 0

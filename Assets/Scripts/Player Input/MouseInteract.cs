@@ -43,12 +43,12 @@ public class MouseInteract : MonoBehaviour
     {
         if (HasHover && Input.GetMouseButtonDown(0))
         {
-            GlobalEventManager.OnUnitCreated.Invoke(Team.PLAYER, previousTile.position);
+            Game.World.CreateUnit(previousTile.position, Team.PLAYER);
         }
 
         if (HasHover && Input.GetMouseButtonDown(1))
         {
-            GlobalEventManager.OnUnitDestroyed.Invoke(Team.PLAYER, previousTile.position);
+            Game.World.DestroyUnit(previousTile.position);
         }
     }
     #endregion

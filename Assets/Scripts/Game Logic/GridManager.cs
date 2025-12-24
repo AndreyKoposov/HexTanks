@@ -15,7 +15,6 @@ public class GridManager : MonoBehaviour
     private void Start()
     {
         InitMap();
-        RegisterToEvents();
     }
 
     private void InitMap()
@@ -27,7 +26,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    private void CreateUnit(Team team, Vector3Int position)
+    public void CreateUnit(Vector3Int position, Team team)
     {
         var unit = Instantiate(prefabs[0], map[position].transform).GetComponent<Tank>();
 
@@ -36,14 +35,8 @@ public class GridManager : MonoBehaviour
         units[position] = unit;
     }
 
-    private void DestroyUnit(Team team, Vector3Int position)
+    public void DestroyUnit(Vector3Int position)
     {
         Destroy(units[position].gameObject);
-    }
-
-    private void RegisterToEvents()
-    {
-        GlobalEventManager.OnUnitCreated.AddListener(CreateUnit);
-        GlobalEventManager.OnUnitDestroyed.AddListener(DestroyUnit);
     }
 }

@@ -15,6 +15,7 @@ public class HexTile : MonoBehaviour
     {
         tank = unit;
         tank.gameObject.transform.parent = transform;
+        tank.MoveTo(position, true);
     }
 
     public void UnsetUnit()

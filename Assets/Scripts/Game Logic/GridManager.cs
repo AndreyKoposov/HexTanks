@@ -10,7 +10,6 @@ public class GridManager : MonoBehaviour
     [SerializeField] private GameObject[] prefabs;
 
     private readonly Dictionary<Vector3Int, HexTile> map = new();
-    private readonly Dictionary<Vector3Int, Tank> units = new();
 
     private void Start()
     {
@@ -35,27 +34,25 @@ public class GridManager : MonoBehaviour
 
         var unit = Instantiate(prefabs[0], 
                                Vector3.zero, 
-                               Quaternion.identity, 
-                               map[position].transform).GetComponent<Tank>();
-
-        unit.Setup(team, position);
-
-        map[position].tank = unit;
-        units[position] = unit;
+                               Quaternion.identity).GetComponent<Tank>();
+        unit.team = team;
+        tile.SetUnit(unit);
     }
 
     public void DestroyUnitAt(Vector3Int position)
     {
-        if(map[position].HasUnit)
-            Destroy(units[position].gameObject);
+        HexTile tile = map[position];
+
+        if (tile.HasUnit)
+        {
+            Destroy(tile.tank.gameObject);
+            tile.UnsetUnit();
+        }
     }
 
     public void MoveUnitFromTo(Vector3Int from, Vector3Int to)
     {
-        var unit = units[from];
-
-        units[from] = null;
-        units[to] = unit;
+        var unit = map[from].tank;
 
         map[from].UnsetUnit();
         map[to].SetUnit(unit);
@@ -65,7 +62,7 @@ public class GridManager : MonoBehaviour
 
     public List<HexTile> GetValidMovesForUnit(Vector3Int position)
     {
-        Tank unit = units[position];
+        Tank unit = map[position].tank;
 
         List<HexTile> result = new();
         HashSet <Vector3Int> origin = new() { position };

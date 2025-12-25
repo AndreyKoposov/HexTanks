@@ -10,4 +10,15 @@ public class HexTile : MonoBehaviour
     {
         get { return tank != null; }
     }
+
+    public void SetUnit(Tank unit)
+    {
+        tank = unit;
+        tank.gameObject.transform.parent = transform;
+    }
+
+    public void UnsetUnit()
+    {
+        tank = null;
+    }
 }

@@ -26,7 +26,7 @@ public class MouseInteract : MonoBehaviour
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnitAt(hoveredTile.position, Team.PLAYER);
+            Game.World.CreateUnitAt(hoveredTile.position, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.World.DestroyUnitAt(hoveredTile.position);
     }

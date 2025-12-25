@@ -53,14 +53,14 @@ public class GridManager : MonoBehaviour
     public void MoveUnitFromTo(Vector3Int from, Vector3Int to)
     {
         var unit = units[from];
+
         units[from] = null;
         units[to] = unit;
-        units[to].transform.parent = map[to].transform;
 
-        map[from].tank = null;
-        map[to].tank = unit;
+        map[from].UnsetUnit();
+        map[to].SetUnit(unit);
 
-        units[to].transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
+        unit.MoveTo(to);
     }
 
     public List<HexTile> GetValidMovesForUnit(Vector3Int position)

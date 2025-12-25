@@ -8,9 +8,9 @@ public class Tank : MonoBehaviour
     public int movementDistance = 3;
 
     public Team team;
-    public Vector3Int position;
+    public VectorHex position;
 
-    public void MoveTo(Vector3Int to, bool force = false)
+    public void MoveTo(VectorHex to, bool force = false)
     {
         position = to;
         transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;

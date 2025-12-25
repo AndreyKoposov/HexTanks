@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.UIElements;
+using static Codice.Client.Common.WebApi.WebApiEndpoints;
 
 public struct VectorHex
 {
@@ -9,12 +11,42 @@ public struct VectorHex
     public readonly int Y  => coords.y;
     public readonly bool Unsigned => coords == -Vector3Int.one;
 
+    #region Directoins
+    private readonly int Even => Mathf.Abs(Y) % 2;
+    public readonly VectorHex Right => new(1, 0);
+    public readonly VectorHex Left => new(-1, 0);
+    public readonly VectorHex RightTop => new(0 + Even, 1);
+    public readonly VectorHex RightBottom => new(0 + Even, -1);
+    public readonly VectorHex LeftTop => new(-1 + Even, 1);
+    public readonly VectorHex LeftBottom => new(-1 + Even, -1);
+    #endregion
+
     public VectorHex(Vector3Int pos)
     {
         coords = pos;
     }
+    public VectorHex(int x, int y)
+    {
+        coords = new(x, y, 0);
+    }
 
     #region Overrides
+    public static VectorHex operator +(VectorHex vh1, VectorHex vh2)
+    {
+        return new(vh1.coords + vh2.coords);
+    }
+    public static VectorHex operator -(VectorHex vh1, VectorHex vh2)
+    {
+        return new(vh1.coords - vh2.coords);
+    }
+    public static bool operator ==(VectorHex vh1, VectorHex vh2)
+    {
+        return vh1.Equals(vh2);
+    }
+    public static bool operator !=(VectorHex vh1, VectorHex vh2)
+    {
+        return !vh1.Equals(vh2);
+    }
     public override readonly bool Equals(object obj)
     {
         if (obj is not VectorHex)

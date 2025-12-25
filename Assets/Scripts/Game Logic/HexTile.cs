@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HexTile : MonoBehaviour
 {
-    public Vector3Int position;
+    public VectorHex position;
     public Tank tank;
     public bool isObstacle = false;
 

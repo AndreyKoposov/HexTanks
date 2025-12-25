@@ -6,26 +6,29 @@ using UnityEngine.Tilemaps;
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
-
     [SerializeField] private GameObject[] prefabs;
 
-    private readonly Dictionary<Vector3Int, HexTile> map = new();
+    private readonly Dictionary<VectorHex, HexTile> map = new();
+
+    //public HexTile this[VectorHex vh]
+    //{
+    //    get => map[]
+    //}
 
     private void Start()
     {
         InitMap();
     }
-
     private void InitMap()
     {
         foreach (var cell in tilemap.GetComponentsInChildren<HexTile>())
         {
-            cell.position = tilemap.WorldToCell(cell.transform.position);
+            cell.position = new(tilemap.WorldToCell(cell.transform.position));
             map[cell.position] = cell;
         }
     }
 
-    public void CreateUnitAt(Vector3Int position, Team team)
+    public void CreateUnitAt(VectorHex position, Team team)
     {
         HexTile tile = map[position];
 
@@ -39,7 +42,7 @@ public class GridManager : MonoBehaviour
         tile.SetUnit(unit);
     }
 
-    public void DestroyUnitAt(Vector3Int position)
+    public void DestroyUnitAt(VectorHex position)
     {
         HexTile tile = map[position];
 
@@ -50,7 +53,7 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void MoveUnitFromTo(Vector3Int from, Vector3Int to)
+    public void MoveUnitFromTo(VectorHex from, VectorHex to)
     {
         var unit = map[from].tank;
 
@@ -60,27 +63,27 @@ public class GridManager : MonoBehaviour
         unit.MoveTo(to);
     }
 
-    public List<HexTile> GetValidMovesForUnit(Vector3Int position)
+    public List<HexTile> GetValidMovesForUnit(VectorHex position)
     {
         Tank unit = map[position].tank;
 
         List<HexTile> result = new();
-        HashSet <Vector3Int> origin = new() { position };
-        HashSet<Vector3Int> positions = GetRing(origin, unit.movementDistance);
+        HashSet <VectorHex> origin = new() { position };
+        HashSet<VectorHex> positions = GetRing(origin, unit.movementDistance);
 
-        foreach (Vector3Int pos in positions)
+        foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].isObstacle)
                 result.Add(map[pos]);
 
         return result;
     }
 
-    private HashSet<Vector3Int> GetRing(HashSet<Vector3Int> prevRing, int iter)
+    private HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter)
     {
         if (iter <= 0)
             return prevRing;
 
-        HashSet<Vector3Int> res = new();
+        HashSet<VectorHex> res = new();
         foreach (var pos in prevRing)
             res.UnionWith(GetNeighbours(pos));
 
@@ -89,18 +92,16 @@ public class GridManager : MonoBehaviour
         return prevRing;
     }
 
-    private HashSet<Vector3Int> GetNeighbours(Vector3Int position)
+    private HashSet<VectorHex> GetNeighbours(VectorHex position)
     {
-        int even = Mathf.Abs(position.y) % 2;
-
         return new()
         {
-            position + new Vector3Int(1, 0,  0),   // Вправо
-            position + new Vector3Int(0 + even, 1, 0),   // Вправо-вверх
-            position + new Vector3Int(-1 + even, 1, 0),   // Влево-вверх
-            position + new Vector3Int(-1, 0, 0),   // Влево
-            position + new Vector3Int(-1 + even, -1, 0),   // Влево-вниз
-            position + new Vector3Int(0 + even, -1, 0)    // Вправо-вниз
+            position + position.Right,
+            position + position.Left,
+            position + position.RightBottom,
+            position + position.RightTop,
+            position + position.LeftBottom,
+            position + position.LeftTop,
         };
     }
 }

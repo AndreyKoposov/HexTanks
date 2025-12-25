@@ -85,7 +85,7 @@ public class GridManager : MonoBehaviour
 
         HashSet<VectorHex> res = new();
         foreach (var pos in prevRing)
-            res.UnionWith(GetNeighbours(pos));
+            res.UnionWith(GetNeighbours(pos).Where(p => !map[p].isObstacle));
 
         prevRing.UnionWith(GetRing(res, iter - 1));
 

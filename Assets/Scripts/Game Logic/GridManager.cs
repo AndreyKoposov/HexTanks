@@ -10,10 +10,10 @@ public class GridManager : MonoBehaviour
 
     private readonly Dictionary<VectorHex, HexTile> map = new();
 
-    //public HexTile this[VectorHex vh]
-    //{
-    //    get => map[]
-    //}
+    public HexTile this[VectorHex vh]
+    {
+        get => map[vh];
+    }
 
     private void Start()
     {
@@ -23,7 +23,7 @@ public class GridManager : MonoBehaviour
     {
         foreach (var cell in tilemap.GetComponentsInChildren<HexTile>())
         {
-            cell.position = new(tilemap.WorldToCell(cell.transform.position));
+            cell.position = (VectorHex)tilemap.WorldToCell(cell.transform.position);
             map[cell.position] = cell;
         }
     }
@@ -63,17 +63,17 @@ public class GridManager : MonoBehaviour
         unit.MoveTo(to);
     }
 
-    public List<HexTile> GetValidMovesForUnit(VectorHex position)
+    public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
         Tank unit = map[position].tank;
 
-        List<HexTile> result = new();
+        List<VectorHex> result = new();
         HashSet <VectorHex> origin = new() { position };
         HashSet<VectorHex> positions = GetRing(origin, unit.movementDistance);
 
         foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].isObstacle)
-                result.Add(map[pos]);
+                result.Add(pos);
 
         return result;
     }

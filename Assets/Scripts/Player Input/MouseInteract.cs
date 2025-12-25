@@ -7,17 +7,17 @@ public class MouseInteract : MonoBehaviour
     public static readonly string L_HIGHLIGHT = "Highlight";
     public static readonly string L_SELECT = "Select";
 
-    private HexTile hoveredTile;
-    private HexTile selectedTile;
-    private List<HexTile> validMoves = new();
+    private VectorHex hoveredTile;
+    private VectorHex selectedTile;
+    private List<VectorHex> validMoves = new();
 
     private bool HoverExist
     {
-        get => hoveredTile != null;
+        get => hoveredTile != VectorHex.UNSIGNED;
     }
     private bool SelectExist
     {
-        get => selectedTile != null;
+        get => selectedTile != VectorHex.UNSIGNED;
     }
 
     private void Update()
@@ -26,9 +26,9 @@ public class MouseInteract : MonoBehaviour
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnitAt(hoveredTile.position, Team.Player);
+            Game.World.CreateUnitAt(hoveredTile, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
-            Game.World.DestroyUnitAt(hoveredTile.position);
+            Game.World.DestroyUnitAt(hoveredTile);
     }
 
     #region Main Logic
@@ -37,9 +37,9 @@ public class MouseInteract : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT, L_SELECT)))
         {
-           var tile = hit.collider.gameObject.GetComponent<HexTile>();
+           var tile = hit.collider.gameObject.GetComponent<HexTile>().position;
 
-            if (!HoverExist || hoveredTile.position != tile.position)
+            if (!HoverExist || hoveredTile != tile)
             {
                 UnhighlightTile();
                 hoveredTile = tile;
@@ -49,14 +49,14 @@ public class MouseInteract : MonoBehaviour
         else
         {
             UnhighlightTile();
-            hoveredTile = null;
+            hoveredTile = VectorHex.UNSIGNED;
         }
     }
     private void CheckClick()
     {
         if (Input.GetMouseButtonDown(0) && HoverExist)
         {
-            if (hoveredTile.HasUnit)
+            if (Game.World[hoveredTile].HasUnit)
             {
                 DeselectTile();
                 selectedTile = hoveredTile;
@@ -64,14 +64,14 @@ public class MouseInteract : MonoBehaviour
             }
             else if (SelectExist && validMoves.Contains(hoveredTile))
             {
-                Game.World.MoveUnitFromTo(selectedTile.position, hoveredTile.position);
+                Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
             }
         }
 
-        if (SelectExist && !selectedTile.HasUnit)
+        if (SelectExist && !Game.World[selectedTile].HasUnit)
         {
             DeselectTile();
-            selectedTile = null;
+            selectedTile = VectorHex.UNSIGNED;
         }
     }
     #endregion
@@ -79,21 +79,21 @@ public class MouseInteract : MonoBehaviour
     #region Operations
     private void HighlightTile()
     {
-        hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_HIGHLIGHT);
+        Game.World[hoveredTile].SetLayer(L_HIGHLIGHT);
     }
     private void UnhighlightTile()
     {
         if (HoverExist)
         {
-            if (SelectExist && (validMoves.Contains(hoveredTile) || selectedTile.position == hoveredTile.position))
-                hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+            if (SelectExist && (validMoves.Contains(hoveredTile) || selectedTile == hoveredTile))
+                Game.World[hoveredTile].SetLayer(L_SELECT);
             else
-                hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+                Game.World[hoveredTile].SetLayer(L_GRID);
         }
     }
     private void SelectTile()
     {
-        selectedTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+        Game.World[selectedTile].SetLayer(L_SELECT);
 
         GetValidMoves();
         SelectValidMoves();
@@ -102,23 +102,23 @@ public class MouseInteract : MonoBehaviour
     {
         if (SelectExist)
         {
-            selectedTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+            Game.World[selectedTile].SetLayer(L_GRID);
             DeselectValidMoves();
         }
     }
     private void GetValidMoves()
     {
-        validMoves = Game.World.GetValidMovesForUnit(selectedTile.position);
+        validMoves = Game.World.GetValidMovesForUnit(selectedTile);
     }
     private void SelectValidMoves()
     {
         foreach (var move in validMoves)
-            move.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
+            Game.World[move].SetLayer(L_SELECT);
     }
     private void DeselectValidMoves()
     {
         foreach (var move in validMoves)
-            move.gameObject.layer = LayerMask.NameToLayer(L_GRID);
+            Game.World[move].SetLayer(L_GRID);
     }
     #endregion
 }

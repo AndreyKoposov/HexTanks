@@ -31,22 +31,12 @@ public struct VectorHex
     }
 
     #region Overrides
-    public static VectorHex operator +(VectorHex vh1, VectorHex vh2)
-    {
-        return new(vh1.coords + vh2.coords);
-    }
-    public static VectorHex operator -(VectorHex vh1, VectorHex vh2)
-    {
-        return new(vh1.coords - vh2.coords);
-    }
-    public static bool operator ==(VectorHex vh1, VectorHex vh2)
-    {
-        return vh1.Equals(vh2);
-    }
-    public static bool operator !=(VectorHex vh1, VectorHex vh2)
-    {
-        return !vh1.Equals(vh2);
-    }
+    public static implicit operator Vector3Int(VectorHex vh) => vh.coords;
+    public static explicit operator VectorHex(Vector3Int v3) => new (v3);
+    public static VectorHex operator +(VectorHex vh1, VectorHex vh2) => (VectorHex)(vh1.coords + vh2.coords);
+    public static VectorHex operator -(VectorHex vh1, VectorHex vh2) => (VectorHex)(vh1.coords - vh2.coords);
+    public static bool operator ==(VectorHex vh1, VectorHex vh2) => vh1.Equals(vh2);
+    public static bool operator !=(VectorHex vh1, VectorHex vh2) => !vh1.Equals(vh2);
     public override readonly bool Equals(object obj)
     {
         if (obj is not VectorHex)

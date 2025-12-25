@@ -431,7 +431,7 @@ GameObject:
   - component: {fileID: 5749700415367382046}
   - component: {fileID: 6731116906541284743}
   - component: {fileID: 5406843609851971990}
-  - component: {fileID: 2258171494520238621}
+  - component: {fileID: 6229861384488447529}
   m_Layer: 0
   m_Name: Tank
   m_TagString: Untagged
@@ -508,7 +508,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2258171494520238621
+--- !u!114 &6229861384488447529
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -517,12 +517,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8495432209897992610}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f0433a5fb23ec4a4aa6e2ca4bea84023, type: 3}
+  m_Script: {fileID: 11500000, guid: f0e3f75aff642fd45ac6985e02d7dc3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 5
-  damage: 2
-  attackDistance: 2
-  movementDistance: 3
-  team: 0
-  position: {x: 0, y: 0, z: 0}
+  info: {fileID: 11400000, guid: fb40ee027af6a5441a18070377c2cb26, type: 2}

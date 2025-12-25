@@ -4,12 +4,7 @@ public enum Team
     Enemy = 1,
 }
 
-public enum Direction
+public enum UnitType
 {
-    Left = 0,
-    Right = 1,
-    UpRight = 2,
-    UpLeft = 3,
-    DownRight = 4,
-    DownLeft = 5,
+    Tank = 0,
 }

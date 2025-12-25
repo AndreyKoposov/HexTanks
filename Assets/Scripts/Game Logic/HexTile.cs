@@ -3,24 +3,23 @@ using UnityEngine;
 public class HexTile : MonoBehaviour
 {
     public VectorHex position;
-    public Tank tank;
+    public Unit unit;
     public bool isObstacle = false;
 
     public bool HasUnit
     {
-        get { return tank != null; }
+        get { return unit != null; }
     }
 
-    public void SetUnit(Tank unit)
+    public void SetUnit(Unit unit)
     {
-        tank = unit;
-        tank.gameObject.transform.parent = transform;
-        tank.MoveTo(position, true);
+        this.unit = unit;
+        this.unit.MoveTo(this, true);
     }
 
     public void UnsetUnit()
     {
-        tank = null;
+        unit = null;
     }
 
     public void SetLayer(string layerName)

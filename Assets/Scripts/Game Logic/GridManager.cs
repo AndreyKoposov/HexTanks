@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
-    [SerializeField] private GameObject[] prefabs;
+    [SerializeField] private UnitFabric fabric;
 
     private readonly Dictionary<VectorHex, HexTile> map = new();
 
@@ -35,10 +35,8 @@ public class GridManager : MonoBehaviour
         if (tile.HasUnit) return;
         if (tile.isObstacle) return;
 
-        var unit = Instantiate(prefabs[0], 
-                               Vector3.zero, 
-                               Quaternion.identity).GetComponent<Tank>();
-        unit.team = team;
+        var unit = fabric.CreateUnit(tile, team);
+
         tile.SetUnit(unit);
     }
 
@@ -48,28 +46,28 @@ public class GridManager : MonoBehaviour
 
         if (tile.HasUnit)
         {
-            Destroy(tile.tank.gameObject);
+            Destroy(tile.unit.gameObject);
             tile.UnsetUnit();
         }
     }
 
     public void MoveUnitFromTo(VectorHex from, VectorHex to)
     {
-        var unit = map[from].tank;
+        var unit = map[from].unit;
 
         map[from].UnsetUnit();
         map[to].SetUnit(unit);
 
-        unit.MoveTo(to);
+        unit.MoveTo(map[to]);
     }
 
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
-        Tank unit = map[position].tank;
+        Unit unit = map[position].unit;
 
         List<VectorHex> result = new();
         HashSet <VectorHex> origin = new() { position };
-        HashSet<VectorHex> positions = GetRing(origin, unit.movementDistance);
+        HashSet<VectorHex> positions = GetRing(origin, unit.info.MovementDistance);
 
         foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].isObstacle)

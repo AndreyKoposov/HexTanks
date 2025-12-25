@@ -22,4 +22,9 @@ public class HexTile : MonoBehaviour
     {
         tank = null;
     }
+
+    public void SetLayer(string layerName)
+    {
+        gameObject.layer = LayerMask.NameToLayer(layerName);
+    }
 }

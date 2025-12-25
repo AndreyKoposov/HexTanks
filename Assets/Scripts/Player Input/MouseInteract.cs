@@ -23,7 +23,7 @@ public class MouseInteract : MonoBehaviour
     private void Update()
     {
         CheckHover();
-        CheckSelect();
+        CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
             Game.World.CreateUnitAt(hoveredTile.position, Team.PLAYER);
@@ -52,13 +52,20 @@ public class MouseInteract : MonoBehaviour
             hoveredTile = null;
         }
     }
-    private void CheckSelect()
+    private void CheckClick()
     {
-        if (Input.GetMouseButtonDown(0) && HoverExist && hoveredTile.HasUnit)
+        if (Input.GetMouseButtonDown(0) && HoverExist)
         {
-            DeselectTile();
-            selectedTile = hoveredTile;
-            SelectTile();
+            if (hoveredTile.HasUnit)
+            {
+                DeselectTile();
+                selectedTile = hoveredTile;
+                SelectTile();
+            }
+            else if (SelectExist && validMoves.Contains(hoveredTile))
+            {
+                Game.World.MoveUnitFromTo(selectedTile.position, hoveredTile.position);
+            }
         }
 
         if (SelectExist && !selectedTile.HasUnit)

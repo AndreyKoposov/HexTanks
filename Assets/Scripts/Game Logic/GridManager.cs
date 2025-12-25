@@ -50,6 +50,19 @@ public class GridManager : MonoBehaviour
             Destroy(units[position].gameObject);
     }
 
+    public void MoveUnitFromTo(Vector3Int from, Vector3Int to)
+    {
+        var unit = units[from];
+        units[from] = null;
+        units[to] = unit;
+        units[to].transform.parent = map[to].transform;
+
+        map[from].tank = null;
+        map[to].tank = unit;
+
+        units[to].transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
+    }
+
     public List<HexTile> GetValidMovesForUnit(Vector3Int position)
     {
         Tank unit = units[position];

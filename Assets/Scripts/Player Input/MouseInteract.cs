@@ -44,8 +44,6 @@ public class MouseInteract : MonoBehaviour
                 UnhighlightTile();
                 hoveredTile = tile;
                 HighlightTile();
-
-                Debug.Log(hoveredTile.position);
             }
         }
         else
@@ -80,7 +78,7 @@ public class MouseInteract : MonoBehaviour
     {
         if (HoverExist)
         {
-            if (SelectExist && hoveredTile.position == selectedTile.position)
+            if (SelectExist && (validMoves.Contains(hoveredTile) || selectedTile.position == hoveredTile.position))
                 hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_SELECT);
             else
                 hoveredTile.gameObject.layer = LayerMask.NameToLayer(L_GRID);
@@ -104,7 +102,6 @@ public class MouseInteract : MonoBehaviour
     private void GetValidMoves()
     {
         validMoves = Game.World.GetValidMovesForUnit(selectedTile.position);
-        Debug.Log(validMoves.Count);
     }
     private void SelectValidMoves()
     {

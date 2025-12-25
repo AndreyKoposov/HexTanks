@@ -59,7 +59,8 @@ public class GridManager : MonoBehaviour
         HashSet<Vector3Int> positions = GetRing(origin, unit.movementDistance);
 
         foreach (Vector3Int pos in positions)
-            result.Add(map[pos]);
+            if (map.Keys.Contains(pos) && !map[pos].isObstacle)
+                result.Add(map[pos]);
 
         return result;
     }

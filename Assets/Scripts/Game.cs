@@ -16,8 +16,17 @@ public class Game : MonoBehaviour
 
     [SerializeField] private GridManager world;
 
+    private int turn = 1;
+
     public static GridManager World
     {
         get => Instance.world;
+    }
+
+    public void NextTurn()
+    {
+        turn++;
+
+        GlobalEventManager.OnNextTurn.Invoke(turn);
     }
 }

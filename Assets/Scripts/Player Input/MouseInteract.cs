@@ -109,9 +109,9 @@ public class MouseInteract : MonoBehaviour
                     Game.World[hoveredTile].SetLayer(L_GRID);
             else
                 Game.World[hoveredTile].SetLayer(L_GRID);
-        }
 
-        hoveredTile = VectorHex.UNSIGNED;
+            hoveredTile = VectorHex.UNSIGNED;
+        }
     }
     private void SelectTile()
     {

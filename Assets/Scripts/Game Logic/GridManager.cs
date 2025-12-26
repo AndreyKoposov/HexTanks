@@ -50,6 +50,8 @@ public class GridManager : MonoBehaviour
 
     public void MoveUnitFromTo(VectorHex from, VectorHex to)
     {
+        if (from == to) return;
+
         var unit = map[from].unit;
 
         map[from].UnsetUnit();
@@ -62,7 +64,7 @@ public class GridManager : MonoBehaviour
         var attackingUnit = map[attacking].unit;
         var attackedUnit = map[attacked].unit;
 
-        attackedUnit.DealDamage(attackingUnit.info.Damage);
+        attackingUnit.AttackUnit(attackedUnit);
 
         if (attackedUnit.Dead)
             fabric.DestroyUnitAt(map[attacked]);
@@ -72,10 +74,10 @@ public class GridManager : MonoBehaviour
     {
         List<VectorHex> result = new();
 
-        if (Game.CurrentPlayer == Team.Enemy)
-            return result;
-
         Unit unit = map[position].unit;
+
+        if (Game.CurrentPlayer == Team.Enemy || !unit.CanMove)
+            return result;
 
         HashSet<VectorHex> positions = GetRing(new() { position }, unit.info.MovementDistance);
 
@@ -88,10 +90,10 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidAttacksForUnit(VectorHex position)
     {
-        if (Game.CurrentPlayer == Team.Enemy)
-            return new();
-
         Unit unit = map[position].unit;
+
+        if (Game.CurrentPlayer == Team.Enemy || !unit.CanMove)
+            return new();
 
         List<VectorHex> result = GetNeighbours(position).Where(p => map[p].HasUnit).ToList();
 

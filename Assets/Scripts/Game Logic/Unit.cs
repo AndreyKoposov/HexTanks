@@ -10,6 +10,7 @@ public class Unit : MonoBehaviour
     private bool canMove;
 
     public bool Dead => hp <= 0;
+    public bool CanMove => canMove;
 
     private void Awake()
     {
@@ -24,20 +25,34 @@ public class Unit : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
+    #region Actions
     public void MoveTo(HexTile to, bool force = false)
+    {
+        SetPosition(to, force);
+
+        canMove = false;
+    }
+    public void AttackUnit(Unit attacked)
+    {
+        attacked.DealDamage(info.Damage);
+
+        canMove = false;
+    }
+    #endregion
+
+    #region Operations
+    public void SetPosition(HexTile to, bool force = false)
     {
         position = to.position;
 
         gameObject.transform.parent = to.gameObject.transform;
         transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
-
-        canMove = false;
     }
-
     public void DealDamage(int damage)
     {
         hp -= damage;
     }
+    #endregion
 
     #region Events
     private void RegisterOnEvents()

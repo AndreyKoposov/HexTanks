@@ -14,7 +14,7 @@ public class HexTile : MonoBehaviour
     public void SetUnit(Unit unit)
     {
         this.unit = unit;
-        this.unit.MoveTo(this, true);
+        this.unit.SetPosition(this, true);
     }
 
     public void UnsetUnit()

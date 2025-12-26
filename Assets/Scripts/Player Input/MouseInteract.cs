@@ -9,7 +9,8 @@ public class MouseInteract : MonoBehaviour
 
     private VectorHex hoveredTile = VectorHex.UNSIGNED;
     private VectorHex selectedTile = VectorHex.UNSIGNED;
-    private List<VectorHex> validMoves = new();
+    private readonly List<VectorHex> validMoves = new();
+    private readonly List<VectorHex> validAttacks = new();
 
     private bool HoverExist
     {
@@ -47,39 +48,49 @@ public class MouseInteract : MonoBehaviour
             if (!HoverExist || hoveredTile != tile)
             {
                 UnhighlightTile();
-                hoveredTile = tile;
-                HighlightTile();
+                HighlightTile(tile);
             }
         }
         else
-        {
             UnhighlightTile();
-            hoveredTile = VectorHex.UNSIGNED;
-        }
     }
     private void CheckClick()
     {
         if (Input.GetMouseButtonDown(0) && HoverExist)
         {
+            if (validMoves.Contains(hoveredTile))
+                UnitMoveCommand();
+            else
+            if (validAttacks.Contains(hoveredTile))
+                UnitAttackCommand();
+            else
             if (Game.World[hoveredTile].HasUnit)
-            {
-                DeselectTile();
-                selectedTile = hoveredTile;
-                SelectTile();
-            }
-            else if (SelectExist && validMoves.Contains(hoveredTile))
-            {
-                Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
-                DeselectTile();
-                selectedTile = VectorHex.UNSIGNED;
-            }
+                UnitSelectCommand();
         }
     }
     #endregion
 
-    #region Operations
-    private void HighlightTile()
+    #region Commands
+    private void UnitSelectCommand()
     {
+        DeselectTile();
+        SelectTile();
+    }
+    private void UnitMoveCommand()
+    {
+        Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
+        DeselectTile();
+    }
+    private void UnitAttackCommand()
+    {
+
+    }
+    #endregion
+
+    #region Operations
+    private void HighlightTile(VectorHex newTile)
+    {
+        hoveredTile = newTile;
         Game.World[hoveredTile].SetLayer(L_HIGHLIGHT);
     }
     private void UnhighlightTile()
@@ -91,9 +102,12 @@ public class MouseInteract : MonoBehaviour
             else
                 Game.World[hoveredTile].SetLayer(L_GRID);
         }
+
+        hoveredTile = VectorHex.UNSIGNED;
     }
     private void SelectTile()
     {
+        selectedTile = hoveredTile;
         Game.World[selectedTile].SetLayer(L_SELECT);
 
         SelectValidMoves();
@@ -105,37 +119,36 @@ public class MouseInteract : MonoBehaviour
             Game.World[selectedTile].SetLayer(L_GRID);
             DeselectValidMoves();
         }
+
+        selectedTile = VectorHex.UNSIGNED;
     }
     private void SelectValidMoves()
     {
-        GetValidMoves();
+        validMoves.AddRange(Game.World.GetValidMovesForUnit(selectedTile));
 
         foreach (var move in validMoves)
             Game.World[move].SetLayer(L_SELECT);
-    }
-    private void GetValidMoves()
-    {
-        validMoves = Game.World.GetValidMovesForUnit(selectedTile);
     }
     private void DeselectValidMoves()
     {
         foreach (var move in validMoves)
             Game.World[move].SetLayer(L_GRID);
+
+        validMoves.Clear();
     }
     #endregion
 
     #region Events
+    private void RegisterOnEvents()
+    {
+        GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
+    }
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
         if (SelectExist && selectedTile == unitPos)
         {
             DeselectTile();
-            selectedTile = VectorHex.UNSIGNED;
         }
-    }
-    private void RegisterOnEvents()
-    {
-        GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
     }
     #endregion
 }

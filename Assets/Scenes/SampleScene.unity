@@ -868,6 +868,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tilemap: {fileID: 452773956}
+  obstacles: {fileID: 1184870505}
   fabric: {fileID: 381706678}
 --- !u!1001 &256824379
 PrefabInstance:

@@ -118,6 +118,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c08bc05b6e2f9c4b9a6d5fb1e5ebad8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 0, z: 0}
-  tank: {fileID: 0}
-  isObstacle: 1
+  unit: {fileID: 0}
+  obstacle: {fileID: 0}
+  isWater: 1

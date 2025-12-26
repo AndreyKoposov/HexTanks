@@ -7,6 +7,7 @@ using UnityEngine.WSA;
 public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
+    [SerializeField] private Tilemap obstacles;
     [SerializeField] private UnitFabric fabric;
 
     private readonly Dictionary<VectorHex, HexTile> map = new();
@@ -27,6 +28,12 @@ public class GridManager : MonoBehaviour
             cell.position = (VectorHex)tilemap.WorldToCell(cell.transform.position);
             map[cell.position] = cell;
         }
+
+        foreach (var obstacle in obstacles.GetComponentsInChildren<Transform>())
+        {
+            var pos = (VectorHex)tilemap.WorldToCell(obstacle.position);
+            map[pos].obstacle = obstacle.gameObject;
+        }
     }
 
     public void CreateUnitAt(VectorHex position, UnitType type, Team team)
@@ -34,7 +41,7 @@ public class GridManager : MonoBehaviour
         HexTile tile = map[position];
 
         if (tile.HasUnit) return;
-        if (tile.isObstacle) return;
+        if (tile.IsObstacle) return;
 
         fabric.CreateUnitAt(tile, type, team);
     }
@@ -107,7 +114,7 @@ public class GridManager : MonoBehaviour
 
         HashSet<VectorHex> res = new();
         foreach (var pos in prevRing)
-            res.UnionWith(GetNeighbours(pos).Where(p => !map[p].isObstacle));
+            res.UnionWith(GetNeighbours(pos).Where(p => !map[p].IsObstacle));
 
         prevRing.UnionWith(GetRing(res, iter - 1));
 

@@ -4,7 +4,10 @@ public class HexTile : MonoBehaviour
 {
     public VectorHex position;
     public Unit unit;
-    public bool isObstacle = false;
+    public GameObject obstacle;
+    public bool isWater;
+
+    public bool IsObstacle => isWater || obstacle != null;
 
     public bool HasUnit
     {

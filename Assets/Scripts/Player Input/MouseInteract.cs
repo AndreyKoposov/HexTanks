@@ -22,7 +22,7 @@ public class MouseInteract : MonoBehaviour
         get => selectedTile != VectorHex.UNSIGNED;
     }
 
-    private void Start()
+    private void Awake()
     {
         RegisterOnEvents();
     }
@@ -166,10 +166,18 @@ public class MouseInteract : MonoBehaviour
     private void RegisterOnEvents()
     {
         GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
-    }
+        GlobalEventManager.OnNextTurn.AddListener(DeselectOnTurnChanged);
+    } 
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
         if (SelectExist && selectedTile == unitPos)
+        {
+            DeselectTile();
+        }
+    }
+    private void DeselectOnTurnChanged(int _)
+    {
+        if (SelectExist)
         {
             DeselectTile();
         }

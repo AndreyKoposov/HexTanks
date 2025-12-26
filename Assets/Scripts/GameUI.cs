@@ -7,11 +7,11 @@ public class GameUI : MonoBehaviour
 
     private void Awake()
     {
-        RegisterEvents();
+        RegisterOnEvents();
     }
 
     #region Events
-    private void RegisterEvents()
+    private void RegisterOnEvents()
     {
         GlobalEventManager.OnNextTurn.AddListener(SetTurnLabel);
     }

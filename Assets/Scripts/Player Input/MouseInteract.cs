@@ -32,7 +32,7 @@ public class MouseInteract : MonoBehaviour
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnitAt(hoveredTile);
+            Game.World.CreateUnitAt(hoveredTile, UnitType.Tank, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.World.DestroyUnitAt(hoveredTile);
     }

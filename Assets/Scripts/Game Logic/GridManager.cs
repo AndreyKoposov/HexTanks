@@ -28,14 +28,14 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void CreateUnitAt(VectorHex position)
+    public void CreateUnitAt(VectorHex position, UnitType type, Team team)
     {
         HexTile tile = map[position];
 
         if (tile.HasUnit) return;
         if (tile.isObstacle) return;
 
-        fabric.CreateUnitAt(tile, UnitType.Tank, Team.Player);
+        fabric.CreateUnitAt(tile, type, team);
     }
 
     public void DestroyUnitAt(VectorHex position)
@@ -66,7 +66,7 @@ public class GridManager : MonoBehaviour
         HashSet<VectorHex> positions = GetRing(origin, unit.info.MovementDistance);
 
         foreach (VectorHex pos in positions)
-            if (map.Keys.Contains(pos) && !map[pos].isObstacle)
+            if (map.Keys.Contains(pos) && !map[pos].HasUnit)
                 result.Add(pos);
 
         return result;

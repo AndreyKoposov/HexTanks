@@ -28,27 +28,23 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void CreateUnitAt(VectorHex position, Team team)
+    public void CreateUnitAt(VectorHex position)
     {
         HexTile tile = map[position];
 
         if (tile.HasUnit) return;
         if (tile.isObstacle) return;
 
-        var unit = fabric.CreateUnit(tile, team);
-
-        tile.SetUnit(unit);
+        fabric.CreateUnitAt(tile, UnitType.Tank, Team.Player);
     }
 
     public void DestroyUnitAt(VectorHex position)
     {
         HexTile tile = map[position];
 
-        if (tile.HasUnit)
-        {
-            Destroy(tile.unit.gameObject);
-            tile.UnsetUnit();
-        }
+        if (!tile.HasUnit) return;
+
+        fabric.DestroyUnitAt(tile);
     }
 
     public void MoveUnitFromTo(VectorHex from, VectorHex to)

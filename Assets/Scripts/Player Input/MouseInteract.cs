@@ -7,8 +7,8 @@ public class MouseInteract : MonoBehaviour
     public static readonly string L_HIGHLIGHT = "Highlight";
     public static readonly string L_SELECT = "Select";
 
-    private VectorHex hoveredTile;
-    private VectorHex selectedTile;
+    private VectorHex hoveredTile = VectorHex.UNSIGNED;
+    private VectorHex selectedTile = VectorHex.UNSIGNED;
     private List<VectorHex> validMoves = new();
 
     private bool HoverExist
@@ -20,13 +20,18 @@ public class MouseInteract : MonoBehaviour
         get => selectedTile != VectorHex.UNSIGNED;
     }
 
+    private void Start()
+    {
+        RegisterOnEvents();
+    }
+
     private void Update()
     {
         CheckHover();
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnitAt(hoveredTile, Team.Player);
+            Game.World.CreateUnitAt(hoveredTile);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.World.DestroyUnitAt(hoveredTile);
     }
@@ -65,13 +70,9 @@ public class MouseInteract : MonoBehaviour
             else if (SelectExist && validMoves.Contains(hoveredTile))
             {
                 Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
+                DeselectTile();
+                selectedTile = VectorHex.UNSIGNED;
             }
-        }
-
-        if (SelectExist && !Game.World[selectedTile].HasUnit)
-        {
-            DeselectTile();
-            selectedTile = VectorHex.UNSIGNED;
         }
     }
     #endregion
@@ -95,7 +96,6 @@ public class MouseInteract : MonoBehaviour
     {
         Game.World[selectedTile].SetLayer(L_SELECT);
 
-        GetValidMoves();
         SelectValidMoves();
     }
     private void DeselectTile()
@@ -106,19 +106,36 @@ public class MouseInteract : MonoBehaviour
             DeselectValidMoves();
         }
     }
+    private void SelectValidMoves()
+    {
+        GetValidMoves();
+
+        foreach (var move in validMoves)
+            Game.World[move].SetLayer(L_SELECT);
+    }
     private void GetValidMoves()
     {
         validMoves = Game.World.GetValidMovesForUnit(selectedTile);
-    }
-    private void SelectValidMoves()
-    {
-        foreach (var move in validMoves)
-            Game.World[move].SetLayer(L_SELECT);
     }
     private void DeselectValidMoves()
     {
         foreach (var move in validMoves)
             Game.World[move].SetLayer(L_GRID);
+    }
+    #endregion
+
+    #region Events
+    private void DeselectOnUnitDestroy(Vector3Int unitPos)
+    {
+        if (SelectExist && selectedTile == unitPos)
+        {
+            DeselectTile();
+            selectedTile = VectorHex.UNSIGNED;
+        }
+    }
+    private void RegisterOnEvents()
+    {
+        GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
     }
     #endregion
 }

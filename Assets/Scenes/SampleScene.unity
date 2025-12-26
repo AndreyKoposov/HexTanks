@@ -4440,6 +4440,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnLabel: {fileID: 524948458}
+  playerLabel: {fileID: 1787096201}
 --- !u!4 &1616741734
 Transform:
   m_ObjectHideFlags: 0

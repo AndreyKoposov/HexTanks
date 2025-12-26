@@ -17,13 +17,28 @@ public class Game : MonoBehaviour
     [SerializeField] private GridManager world;
 
     private int turn = 1;
+    private Team team = Team.Player;
 
     public static GridManager World
     {
         get => Instance.world;
     }
+    public static Team CurrentPlayer
+    {
+        get => Instance.team;
+    }
 
-    public void NextTurn()
+    public void EndTurn()
+    {
+        team = (Team)(1 - (int)team);
+
+        GlobalEventManager.OnEndTurn.Invoke(team);
+
+        if (team == Team.Player)
+            NextTurn();
+    }
+
+    private void NextTurn()
     {
         turn++;
 

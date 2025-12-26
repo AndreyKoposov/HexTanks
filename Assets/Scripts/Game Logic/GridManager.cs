@@ -70,11 +70,14 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
+        List<VectorHex> result = new();
+
+        if (Game.CurrentPlayer == Team.Enemy)
+            return result;
+
         Unit unit = map[position].unit;
 
-        List<VectorHex> result = new();
-        HashSet <VectorHex> origin = new() { position };
-        HashSet<VectorHex> positions = GetRing(origin, unit.info.MovementDistance);
+        HashSet<VectorHex> positions = GetRing(new() { position }, unit.info.MovementDistance);
 
         foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].HasUnit)
@@ -85,6 +88,9 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidAttacksForUnit(VectorHex position)
     {
+        if (Game.CurrentPlayer == Team.Enemy)
+            return new();
+
         Unit unit = map[position].unit;
 
         List<VectorHex> result = GetNeighbours(position).Where(p => map[p].HasUnit).ToList();

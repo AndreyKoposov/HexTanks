@@ -36,6 +36,8 @@ public class MouseInteract : MonoBehaviour
             Game.World.CreateUnitAt(hoveredTile, UnitType.Tank, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.World.DestroyUnitAt(hoveredTile);
+        if (HoverExist && Input.GetKeyDown(KeyCode.G))
+            Game.Instance.EndTurn();
     }
 
     #region Main Logic
@@ -166,7 +168,7 @@ public class MouseInteract : MonoBehaviour
     private void RegisterOnEvents()
     {
         GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
-        GlobalEventManager.OnNextTurn.AddListener(DeselectOnTurnChanged);
+        GlobalEventManager.OnEndTurn.AddListener(DeselectOnTurnChanged);
     } 
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
@@ -175,7 +177,7 @@ public class MouseInteract : MonoBehaviour
             DeselectTile();
         }
     }
-    private void DeselectOnTurnChanged(int _)
+    private void DeselectOnTurnChanged(Team _)
     {
         if (SelectExist)
         {

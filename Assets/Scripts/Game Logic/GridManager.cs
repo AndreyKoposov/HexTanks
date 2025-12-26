@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.WSA;
 
 public class GridManager : MonoBehaviour
 {
@@ -56,6 +57,16 @@ public class GridManager : MonoBehaviour
 
         unit.MoveTo(map[to]);
     }
+    public void AttackUnitAt(VectorHex attacking, VectorHex attacked)
+    {
+        var attackingUnit = map[attacking].unit;
+        var attackedUnit = map[attacked].unit;
+
+        attackedUnit.DealDamage(attackingUnit.info.Damage);
+
+        if (attackedUnit.Dead)
+            fabric.DestroyUnitAt(map[attacked]);
+    }
 
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
@@ -68,6 +79,15 @@ public class GridManager : MonoBehaviour
         foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].HasUnit)
                 result.Add(pos);
+
+        return result;
+    }
+
+    public List<VectorHex> GetValidAttacksForUnit(VectorHex position)
+    {
+        Unit unit = map[position].unit;
+
+        List<VectorHex> result = GetNeighbours(position).Where(p => map[p].HasUnit).ToList();
 
         return result;
     }

@@ -8,6 +8,8 @@ public class Unit : MonoBehaviour
     private Team team;
     private VectorHex position;
 
+    public bool Dead => hp <= 0;
+
     public void Setup(Team Team)
     {
         team = Team;
@@ -21,5 +23,10 @@ public class Unit : MonoBehaviour
 
         gameObject.transform.parent = to.gameObject.transform;
         transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
+    }
+
+    public void DealDamage(int damage)
+    {
+        hp -= damage;
     }
 }

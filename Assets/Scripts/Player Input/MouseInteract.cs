@@ -7,8 +7,7 @@ public class MouseInteract : MonoBehaviour
 {
     public static readonly string L_GRID = "Grid";
     public static readonly string L_HIGHLIGHT = "Highlight";
-    public static readonly string L_SELECT = "Select";
-    public static readonly string L_ATTACK = "Attack";
+    public static readonly string L_UI = "UI";
 
     private VectorHex hoveredTile = VectorHex.UNSIGNED;
     private VectorHex selectedTile = VectorHex.UNSIGNED;
@@ -45,7 +44,7 @@ public class MouseInteract : MonoBehaviour
     private void CheckHover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT)))
+        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT, L_UI)))
         {
            var tile = hit.collider.gameObject.GetComponent<HexTile>().position;
 
@@ -115,22 +114,10 @@ public class MouseInteract : MonoBehaviour
     }
     private void UnhighlightTile()
     {
-        if (HoverExist)
-        {
-            //if (SelectExist)
-            //    if (validMoves.Contains(hoveredTile) || selectedTile == hoveredTile)
-            //        Game.World[hoveredTile].SetLayer(L_SELECT);
-            //    else 
-            //    if (validAttacks.Contains(hoveredTile))
-            //        Game.World[hoveredTile].SetLayer(L_ATTACK);
-            //    else
-            //        Game.World[hoveredTile].SetLayer(L_GRID);
-            //else
-            //    Game.World[hoveredTile].SetLayer(L_GRID);
+        if (!HoverExist) return;
 
-            Game.World[hoveredTile].SetLayer(L_GRID);
-            hoveredTile = VectorHex.UNSIGNED;
-        }
+        Game.World[hoveredTile].SetLayer(L_GRID);
+        hoveredTile = VectorHex.UNSIGNED;
     }
     private void SelectTile()
     {
@@ -219,17 +206,14 @@ public class MouseInteract : MonoBehaviour
     } 
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
-        if (SelectExist && selectedTile == unitPos)
+        if (selectedTile == unitPos)
         {
             DeselectAllUnitTiles();
         }
     }
     private void DeselectOnTurnChanged(Team _)
     {
-        if (SelectExist)
-        {
-            DeselectAllUnitTiles();
-        }
+        DeselectAll();
     }
     #endregion
 }

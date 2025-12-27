@@ -29,10 +29,10 @@ public class GridManager : MonoBehaviour
             map[cell.position] = cell;
         }
 
-        foreach (var obstacle in obstacles.GetComponentsInChildren<Transform>())
+        foreach (var obstacle in obstacles.GetComponentsInChildren<Obstacle>())
         {
-            var pos = (VectorHex)tilemap.WorldToCell(obstacle.position);
-            map[pos].obstacle = obstacle.gameObject;
+            var pos = (VectorHex)tilemap.WorldToCell(obstacle.transform.position);
+            map[pos].obstacle = obstacle;
         }
     }
 
@@ -78,7 +78,7 @@ public class GridManager : MonoBehaviour
     }
     public void SelectBuildingAt(VectorHex position)
     {
-        Building building = map[position].GetComponent<Building>();
+        Building building = map[position].obstacle as Building;
 
         GlobalEventManager.BuildingSelected.Invoke(building);
     }

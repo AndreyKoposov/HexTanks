@@ -4,7 +4,7 @@ public class HexTile : MonoBehaviour
 {
     public VectorHex position;
     public Unit unit;
-    public GameObject obstacle;
+    public Obstacle obstacle;
     public bool isWater;
 
     public bool IsObstacle => isWater || obstacle != null;
@@ -15,7 +15,7 @@ public class HexTile : MonoBehaviour
     }
     public bool HasBuilding
     {
-        get => obstacle != null && obstacle.TryGetComponent<Building>(out var _);
+        get => obstacle != null && obstacle is Building;
     }
 
     public void SetUnit(Unit unit)

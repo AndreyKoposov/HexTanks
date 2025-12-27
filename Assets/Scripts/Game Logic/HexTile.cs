@@ -13,6 +13,10 @@ public class HexTile : MonoBehaviour
     {
         get { return unit != null; }
     }
+    public bool HasBuilding
+    {
+        get => obstacle != null && obstacle.TryGetComponent<Building>(out var _);
+    }
 
     public void SetUnit(Unit unit)
     {

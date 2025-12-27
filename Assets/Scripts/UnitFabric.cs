@@ -12,7 +12,7 @@ public class UnitFabric : MonoBehaviour
         unit.Setup(team);
         tile.SetUnit(unit);
 
-        GlobalEventManager.OnUnitCreated.Invoke(tile.position);
+        GlobalEventManager.UnitCreated.Invoke(tile.position);
     }
 
     public void DestroyUnitAt(HexTile tile)
@@ -22,7 +22,7 @@ public class UnitFabric : MonoBehaviour
         tile.UnsetUnit();
         Destroy(unit.gameObject);
 
-        GlobalEventManager.OnUnitDestroyed.Invoke(tile.position);
+        GlobalEventManager.UnitDestroyed.Invoke(tile.position);
     }
 
     private GameObject GetPrefab(UnitType type)

@@ -57,7 +57,7 @@ public class Unit : MonoBehaviour
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.OnNextTurn.AddListener(ResetOnTurnChanged);
+        GlobalEventManager.TurnChanged.AddListener(ResetOnTurnChanged);
     }
     private void ResetOnTurnChanged(int _)
     {

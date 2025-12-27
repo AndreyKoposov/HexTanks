@@ -36,8 +36,6 @@ public class MouseInteract : MonoBehaviour
             Game.World.CreateUnitAt(hoveredTile, UnitType.Tank, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.World.DestroyUnitAt(hoveredTile);
-        if (HoverExist && Input.GetKeyDown(KeyCode.G))
-            Game.Instance.EndTurn();
     }
 
     #region Main Logic
@@ -69,6 +67,9 @@ public class MouseInteract : MonoBehaviour
             else
             if (Game.World[hoveredTile].HasUnit)
                 UnitSelectCommand();
+            else
+            if (Game.World[hoveredTile].HasBuilding)
+                BuildingSelectCommand();
         }
     }
     #endregion
@@ -76,18 +77,27 @@ public class MouseInteract : MonoBehaviour
     #region Commands
     private void UnitSelectCommand()
     {
+        DeselectAllUnitTiles();
+        SelectAllUnitTiles();
+    }
+    private void BuildingSelectCommand()
+    {
         DeselectTile();
         SelectTile();
+
+        Game.World.SelectBuildingAt(selectedTile);
     }
     private void UnitMoveCommand()
     {
         Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
-        DeselectTile();
+
+        DeselectAllUnitTiles();
     }
     private void UnitAttackCommand()
     {
         Game.World.AttackUnitAt(selectedTile, hoveredTile);
-        DeselectTile();
+
+        DeselectAllUnitTiles();
     }
     #endregion
 
@@ -119,17 +129,12 @@ public class MouseInteract : MonoBehaviour
     {
         selectedTile = hoveredTile;
         Game.World[selectedTile].SetLayer(L_SELECT);
-
-        SelectValidMoves();
-        SelectValidAttacks();
     }
     private void DeselectTile()
     {
         if (SelectExist)
         {
             Game.World[selectedTile].SetLayer(L_GRID);
-            DeselectValidMoves();
-            DeselectValidAttacks();
         }
 
         selectedTile = VectorHex.UNSIGNED;
@@ -162,26 +167,38 @@ public class MouseInteract : MonoBehaviour
 
         validAttacks.Clear();
     }
+    private void SelectAllUnitTiles()
+    {
+        SelectTile();
+        SelectValidMoves();
+        SelectValidAttacks();
+    }
+    private void DeselectAllUnitTiles()
+    {
+        DeselectTile();
+        DeselectValidMoves();
+        DeselectValidAttacks();
+    }
     #endregion
 
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.OnUnitDestroyed.AddListener(DeselectOnUnitDestroy);
-        GlobalEventManager.OnEndTurn.AddListener(DeselectOnTurnChanged);
+        GlobalEventManager.UnitDestroyed.AddListener(DeselectOnUnitDestroy);
+        GlobalEventManager.EndTurn.AddListener(DeselectOnTurnChanged);
     } 
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
         if (SelectExist && selectedTile == unitPos)
         {
-            DeselectTile();
+            DeselectAllUnitTiles();
         }
     }
     private void DeselectOnTurnChanged(Team _)
     {
         if (SelectExist)
         {
-            DeselectTile();
+            DeselectAllUnitTiles();
         }
     }
     #endregion

@@ -6,6 +6,8 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI turnLabel;
     [SerializeField] private TextMeshProUGUI playerLabel;
 
+    [SerializeField] private BuildingPanel buildingPanel;
+
     private void Awake()
     {
         RegisterOnEvents();
@@ -19,8 +21,9 @@ public class GameUI : MonoBehaviour
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.OnNextTurn.AddListener(SetTurnLabel);
-        GlobalEventManager.OnEndTurn.AddListener(SetPlayerLabel);
+        GlobalEventManager.TurnChanged.AddListener(SetTurnLabel);
+        GlobalEventManager.EndTurn.AddListener(SetPlayerLabel);
+        GlobalEventManager.BuildingSelected.AddListener(ActivateBuildingPanel);
     }
     private void SetTurnLabel(int turn)
     {
@@ -29,6 +32,11 @@ public class GameUI : MonoBehaviour
     private void SetPlayerLabel(Team team)
     {
         playerLabel.text = $"{team}";
+    }
+    private void ActivateBuildingPanel(Building building)
+    {
+        buildingPanel.gameObject.SetActive(true);
+        buildingPanel.Setup(building);
     }
     #endregion
 }

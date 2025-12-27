@@ -32,7 +32,7 @@ public class Game : MonoBehaviour
     {
         team = (Team)(1 - (int)team);
 
-        GlobalEventManager.OnEndTurn.Invoke(team);
+        GlobalEventManager.EndTurn.Invoke(team);
 
         if (team == Team.Player)
             NextTurn();
@@ -42,6 +42,6 @@ public class Game : MonoBehaviour
     {
         turn++;
 
-        GlobalEventManager.OnNextTurn.Invoke(turn);
+        GlobalEventManager.TurnChanged.Invoke(turn);
     }
 }

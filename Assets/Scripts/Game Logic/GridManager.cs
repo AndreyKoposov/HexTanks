@@ -76,6 +76,12 @@ public class GridManager : MonoBehaviour
         if (attackedUnit.Dead)
             fabric.DestroyUnitAt(map[attacked]);
     }
+    public void SelectBuildingAt(VectorHex position)
+    {
+        Building building = map[position].GetComponent<Building>();
+
+        GlobalEventManager.BuildingSelected.Invoke(building);
+    }
 
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {

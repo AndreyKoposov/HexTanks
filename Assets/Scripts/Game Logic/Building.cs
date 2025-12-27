@@ -1,14 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-using static PlasticGui.WorkspaceWindow.Merge.MergeInProgress;
 
 public class Building : MonoBehaviour
 {
+    public List<VectorHex> territory = new();
+
     [SerializeField] private Team team;
-    [SerializeField] private List<VectorHex> territory = new();
 
     private VectorHex position;
-
     private UnitType unitToBuild;
     private int turnsLeft;
 
@@ -29,7 +28,7 @@ public class Building : MonoBehaviour
         unitToBuild = unit;
         turnsLeft = 1;
 
-        GlobalEventManager.OnNextTurn.AddListener(ProgressBuildOnTurnChanged);
+        GlobalEventManager.TurnChanged.AddListener(ProgressBuildOnTurnChanged);
     }
 
     #region Events
@@ -40,7 +39,7 @@ public class Building : MonoBehaviour
         if (turnsLeft <= 0)
             Game.World.CreateUnitAt(position, unitToBuild, team);
 
-        GlobalEventManager.OnNextTurn.RemoveListener(ProgressBuildOnTurnChanged);
+        GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
     }
     #endregion
 }

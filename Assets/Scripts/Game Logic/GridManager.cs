@@ -32,7 +32,7 @@ public class GridManager : MonoBehaviour
         foreach (var obstacle in obstacles.GetComponentsInChildren<Obstacle>())
         {
             var pos = (VectorHex)tilemap.WorldToCell(obstacle.transform.position);
-            map[pos].obstacle = obstacle;
+            map[pos].SetObstacle(obstacle);
         }
     }
 
@@ -41,7 +41,7 @@ public class GridManager : MonoBehaviour
         HexTile tile = map[position];
 
         if (tile.HasUnit) return;
-        if (tile.IsObstacle) return;
+        //if (tile.IsObstacle) return;
 
         fabric.CreateUnitAt(tile, type, team);
     }

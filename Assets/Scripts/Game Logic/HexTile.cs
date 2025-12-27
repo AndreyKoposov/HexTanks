@@ -24,6 +24,16 @@ public class HexTile : MonoBehaviour
         this.unit.SetPosition(this, true);
     }
 
+    public void SetObstacle(Obstacle obs)
+    {
+        obstacle = obs;
+        
+        if (obstacle is Building building)
+        {
+            building.position = position;
+        }
+    }
+
     public void UnsetUnit()
     {
         unit = null;

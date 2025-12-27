@@ -7,25 +7,16 @@ public class Building : Obstacle
 
     [SerializeField] private Team team;
 
-    private VectorHex position;
+    public VectorHex position;
     private UnitType unitToBuild;
     private int turnsLeft;
 
     public UnitType UnitToBuild => unitToBuild;
     public int TurnsLeft => turnsLeft;
 
-    public void Setup(HexTile tile)
+    public void StartBuildUnit(UnitType type)
     {
-        transform.rotation = Quaternion.identity;
-        position = tile.position;
-
-        gameObject.transform.parent = tile.gameObject.transform;
-        transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
-    }
-
-    public void StartBuildUnit(UnitType unit)
-    {
-        unitToBuild = unit;
+        unitToBuild = type;
         turnsLeft = 1;
 
         GlobalEventManager.TurnChanged.AddListener(ProgressBuildOnTurnChanged);

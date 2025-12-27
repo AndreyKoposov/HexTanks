@@ -14,6 +14,14 @@ public class Building : Obstacle
     public UnitType UnitToBuild => unitToBuild;
     public int TurnsLeft => turnsLeft;
 
+    private void Start()
+    {
+        if (team == Team.Player)
+            GetComponent<MeshRenderer>().material = Game.Instance.playerMat;
+        if (team == Team.Enemy)
+            GetComponent<MeshRenderer>().material = Game.Instance.enemyMat;
+    }
+
     public void StartBuildUnit(UnitType type)
     {
         unitToBuild = type;

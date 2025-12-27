@@ -24,6 +24,11 @@ public class Unit : MonoBehaviour
         hp = info.Hp;
         canMove = true;
         transform.rotation = Quaternion.identity;
+
+        if (team == Team.Player)
+            GetComponent<MeshRenderer>().material = Game.Instance.playerMat;
+        if (team == Team.Enemy)
+            GetComponent<MeshRenderer>().material = Game.Instance.enemyMat;
     }
 
     #region Actions

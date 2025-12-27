@@ -17,6 +17,9 @@ public class Game : MonoBehaviour
     [SerializeField] private GridManager world;
     [SerializeField] private GameUI ui;
 
+    public Material playerMat;
+    public Material enemyMat;
+
     private int turn = 1;
     private Team team = Team.Player;
 

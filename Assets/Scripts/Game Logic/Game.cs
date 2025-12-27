@@ -15,6 +15,7 @@ public class Game : MonoBehaviour
     #endregion
 
     [SerializeField] private GridManager world;
+    [SerializeField] private GameUI ui;
 
     private int turn = 1;
     private Team team = Team.Player;
@@ -22,6 +23,10 @@ public class Game : MonoBehaviour
     public static GridManager World
     {
         get => Instance.world;
+    }
+    public static GameUI UI
+    {
+        get => Instance.ui;
     }
     public static Team CurrentPlayer
     {

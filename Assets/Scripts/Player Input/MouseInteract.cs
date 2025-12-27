@@ -1,5 +1,7 @@
+using Codice.Client.Common.GameUI;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MouseInteract : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class MouseInteract : MonoBehaviour
     private VectorHex selectedTile = VectorHex.UNSIGNED;
     private readonly List<VectorHex> validMoves = new();
     private readonly List<VectorHex> validAttacks = new();
+    private bool selectBuilding = false;
 
     private bool HoverExist
     {
@@ -70,6 +73,8 @@ public class MouseInteract : MonoBehaviour
             else
             if (Game.World[hoveredTile].HasBuilding)
                 BuildingSelectCommand();
+            else
+                DeselectAll();
         }
     }
     #endregion
@@ -77,15 +82,15 @@ public class MouseInteract : MonoBehaviour
     #region Commands
     private void UnitSelectCommand()
     {
-        DeselectAllUnitTiles();
+        DeselectAll();
         SelectAllUnitTiles();
     }
     private void BuildingSelectCommand()
     {
-        DeselectTile();
-        SelectTile();
+        DeselectAll();
 
-        Game.World.SelectBuildingAt(selectedTile);
+        SelectTile();
+        SelectBuilding();
     }
     private void UnitMoveCommand()
     {
@@ -132,11 +137,9 @@ public class MouseInteract : MonoBehaviour
     }
     private void DeselectTile()
     {
-        if (SelectExist)
-        {
-            Game.World[selectedTile].SetLayer(L_GRID);
-        }
+        if (!SelectExist) return;
 
+        Game.World[selectedTile].SetLayer(L_GRID);
         selectedTile = VectorHex.UNSIGNED;
     }
     private void SelectValidMoves()
@@ -148,6 +151,8 @@ public class MouseInteract : MonoBehaviour
     }
     private void DeselectValidMoves()
     {
+        if (validMoves.Count == 0) return;
+
         foreach (var move in validMoves)
             Game.World[move].SetLayer(L_GRID);
 
@@ -162,10 +167,28 @@ public class MouseInteract : MonoBehaviour
     }
     private void DeselectValidAttacks()
     {
+        if (validAttacks.Count == 0) return;
+
         foreach (var move in validAttacks)
             Game.World[move].SetLayer(L_GRID);
 
         validAttacks.Clear();
+    }
+    private void SelectBuilding()
+    {
+        Building building = Game.World[selectedTile].obstacle as Building;
+
+        Game.UI.OpenBuildingPanel(building);
+
+        selectBuilding = true;
+    }
+    private void DeselectBuilding()
+    {
+        if (!selectBuilding) return;
+
+        Game.UI.CloseBuildingPanel();
+
+        selectBuilding = false;
     }
     private void SelectAllUnitTiles()
     {
@@ -178,6 +201,11 @@ public class MouseInteract : MonoBehaviour
         DeselectTile();
         DeselectValidMoves();
         DeselectValidAttacks();
+    }
+    private void DeselectAll()
+    {
+        DeselectAllUnitTiles();
+        DeselectBuilding();
     }
     #endregion
 

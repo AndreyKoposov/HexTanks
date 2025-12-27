@@ -17,13 +17,21 @@ public class GameUI : MonoBehaviour
         SetTurnLabel(1);
         SetPlayerLabel(Game.CurrentPlayer);
     }
+    public void OpenBuildingPanel(Building building)
+    {
+        buildingPanel.gameObject.SetActive(true);
+        buildingPanel.Setup(building);
+    }
+    public void CloseBuildingPanel()
+    {
+        buildingPanel.gameObject.SetActive(false);
+    }
 
     #region Events
     private void RegisterOnEvents()
     {
         GlobalEventManager.TurnChanged.AddListener(SetTurnLabel);
         GlobalEventManager.EndTurn.AddListener(SetPlayerLabel);
-        GlobalEventManager.BuildingSelected.AddListener(ActivateBuildingPanel);
     }
     private void SetTurnLabel(int turn)
     {
@@ -32,11 +40,6 @@ public class GameUI : MonoBehaviour
     private void SetPlayerLabel(Team team)
     {
         playerLabel.text = $"{team}";
-    }
-    private void ActivateBuildingPanel(Building building)
-    {
-        buildingPanel.gameObject.SetActive(true);
-        buildingPanel.Setup(building);
     }
     #endregion
 }

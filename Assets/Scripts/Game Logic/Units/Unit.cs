@@ -11,6 +11,7 @@ public class Unit : MonoBehaviour
 
     public bool Dead => hp <= 0;
     public bool CanMove => canMove;
+    public Team Team => team;
 
     private void Awake()
     {

@@ -45,7 +45,7 @@ public class MouseInteract : MonoBehaviour
     private void CheckHover()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT, L_SELECT, L_ATTACK)))
+        if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT)))
         {
            var tile = hit.collider.gameObject.GetComponent<HexTile>().position;
 
@@ -83,6 +83,7 @@ public class MouseInteract : MonoBehaviour
     private void UnitSelectCommand()
     {
         DeselectAll();
+
         SelectAllUnitTiles();
     }
     private void BuildingSelectCommand()
@@ -116,30 +117,31 @@ public class MouseInteract : MonoBehaviour
     {
         if (HoverExist)
         {
-            if (SelectExist)
-                if (validMoves.Contains(hoveredTile) || selectedTile == hoveredTile)
-                    Game.World[hoveredTile].SetLayer(L_SELECT);
-                else 
-                if (validAttacks.Contains(hoveredTile))
-                    Game.World[hoveredTile].SetLayer(L_ATTACK);
-                else
-                    Game.World[hoveredTile].SetLayer(L_GRID);
-            else
-                Game.World[hoveredTile].SetLayer(L_GRID);
+            //if (SelectExist)
+            //    if (validMoves.Contains(hoveredTile) || selectedTile == hoveredTile)
+            //        Game.World[hoveredTile].SetLayer(L_SELECT);
+            //    else 
+            //    if (validAttacks.Contains(hoveredTile))
+            //        Game.World[hoveredTile].SetLayer(L_ATTACK);
+            //    else
+            //        Game.World[hoveredTile].SetLayer(L_GRID);
+            //else
+            //    Game.World[hoveredTile].SetLayer(L_GRID);
 
+            Game.World[hoveredTile].SetLayer(L_GRID);
             hoveredTile = VectorHex.UNSIGNED;
         }
     }
     private void SelectTile()
     {
         selectedTile = hoveredTile;
-        Game.World[selectedTile].SetLayer(L_SELECT);
+        Game.World[selectedTile].ApplySelect(SelectType.Default);
     }
     private void DeselectTile()
     {
         if (!SelectExist) return;
 
-        Game.World[selectedTile].SetLayer(L_GRID);
+        Game.World[selectedTile].ApplySelect(SelectType.None);
         selectedTile = VectorHex.UNSIGNED;
     }
     private void SelectValidMoves()
@@ -147,14 +149,14 @@ public class MouseInteract : MonoBehaviour
         validMoves.AddRange(Game.World.GetValidMovesForUnit(selectedTile));
 
         foreach (var move in validMoves)
-            Game.World[move].SetLayer(L_SELECT);
+            Game.World[move].ApplySelect(SelectType.Default);
     }
     private void DeselectValidMoves()
     {
         if (validMoves.Count == 0) return;
 
         foreach (var move in validMoves)
-            Game.World[move].SetLayer(L_GRID);
+            Game.World[move].ApplySelect(SelectType.None);
 
         validMoves.Clear();
     }
@@ -163,14 +165,14 @@ public class MouseInteract : MonoBehaviour
         validAttacks.AddRange(Game.World.GetValidAttacksForUnit(selectedTile));
 
         foreach (var move in validAttacks)
-            Game.World[move].SetLayer(L_ATTACK);
+            Game.World[move].ApplySelect(SelectType.Attack);
     }
     private void DeselectValidAttacks()
     {
         if (validAttacks.Count == 0) return;
 
         foreach (var move in validAttacks)
-            Game.World[move].SetLayer(L_GRID);
+            Game.World[move].ApplySelect(SelectType.None);
 
         validAttacks.Clear();
     }

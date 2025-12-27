@@ -17,6 +17,7 @@ public class GameUI : MonoBehaviour
         SetTurnLabel(1);
         SetPlayerLabel(Game.CurrentPlayer);
     }
+
     public void OpenBuildingPanel(Building building)
     {
         buildingPanel.gameObject.SetActive(true);

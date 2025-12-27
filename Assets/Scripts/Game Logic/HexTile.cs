@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HexTile : MonoBehaviour
 {
+    [SerializeField] private SpriteRenderer select;
+
     public VectorHex position;
     public Unit unit;
     public Obstacle obstacle;
@@ -42,5 +46,23 @@ public class HexTile : MonoBehaviour
     public void SetLayer(string layerName)
     {
         gameObject.layer = LayerMask.NameToLayer(layerName);
+    }
+
+    public void ApplySelect(SelectType type)
+    {
+        switch (type)
+        {
+            case SelectType.None:
+                select.gameObject.SetActive(false);
+                break;
+            case SelectType.Default:
+                select.gameObject.SetActive(true);
+                select.color = Color.blue;
+                break;
+            case SelectType.Attack:
+                select.gameObject.SetActive(true);
+                select.color = Color.red;
+                break;
+        }
     }
 }

@@ -63,8 +63,7 @@ public class Unit : MonoBehaviour
         position = to.Position;
 
         gameObject.transform.parent = to.gameObject.transform;
-        //transform.localPosition = OffsetOverTile;
-        transform.localPosition = Vector3.zero;
+        transform.localPosition = OffsetOverTile;
     }
     private void SetTeam(Team team)
     {
@@ -77,54 +76,11 @@ public class Unit : MonoBehaviour
     }
     private IEnumerator MoveByPath(List<VectorHex> path)
     {
-        for (int i = 0; i < path.Count; i++)
+        foreach (VectorHex p in path)
         {
-            VectorHex pos = path[i];
-            Vector3 tilePos = Game.Grid[pos].transform.position;
-
-            if (i == 0)
-            {
-                yield return Rotate(pos);
-                yield return MoveByLine(tilePos);
-            }
-            else
-            {
-                var tileLocalPos = transform.worldToLocalMatrix.MultiplyPoint(tilePos);
-                float h = (tileLocalPos).magnitude / 2;
-                Debug.Log((tileLocalPos).y);
-                float radius = h * 2 / Mathf.Sqrt(3);
-
-                if (tileLocalPos.z < -0.01f) // Left
-                {
-                    var point = radius / 2f * Vector3.right;
-                    point += h * 2 * Vector3.back;
-                    var pointGlobal = transform.localToWorldMatrix.MultiplyPoint(point);
-
-                    Debug.Log("Left");
-                    Debug.DrawRay(pointGlobal, Vector3.up, Color.red, 100f);
-
-                    yield return MoveByCircle(pointGlobal, Vector3.up, -1);
-                }
-                else
-                if (tileLocalPos.z > 0.01f) // Right
-                {
-                    var point = radius / 2f * Vector3.right;
-                    point += h * 2 * Vector3.forward;
-                    var pointGlobal = transform.localToWorldMatrix.MultiplyPoint(point);
-
-                    Debug.Log("Right");
-                    Debug.DrawRay(pointGlobal, Vector3.up, Color.red, 100f);
-
-                    yield return MoveByCircle(pointGlobal, Vector3.up, 1);
-                }
-                else                        // Center
-                {
-                    Debug.Log("Center");
-                    yield return MoveByLine(tilePos);
-                }
-            }
-
-            SetPosition(Game.Grid[path[i]]);
+            yield return Rotate(p);
+            yield return MoveByLine(Game.Grid[p].transform.position);
+            SetPosition(Game.Grid[p]);
         }
     }
     private IEnumerator Rotate(VectorHex p)
@@ -150,11 +106,11 @@ public class Unit : MonoBehaviour
         if (Mathf.Abs(delta) > Mathf.Abs(delta + 360))
             delta += 360;
 
-        if (Mathf.Abs(targetAngle - transform.rotation.eulerAngles.y) > 0.00001f)
+        if (Mathf.Abs(delta) > 0.01f)
             for (int j = 0; j < frames; j++)
             {
                 transform.Rotate(Vector3.up, delta / frames);
-                yield return new WaitForSeconds(0.25f / frames);
+                yield return new WaitForSeconds(0.2f / frames);
             }
     }
     private IEnumerator MoveByLine(Vector3 point)
@@ -164,16 +120,7 @@ public class Unit : MonoBehaviour
         for (int j = 0; j < frames; j++)
         {
             transform.Translate(delta / frames * Vector3.left, Space.Self);
-            yield return new WaitForSeconds(1f / frames);
-        }
-    }
-    private IEnumerator MoveByCircle(Vector3 point, Vector3 axis, int direction)
-    {
-        int frames = 20;
-        for (int j = 0; j < frames; j++)
-        {
-            transform.RotateAround(point, axis, direction * 60 / frames);
-            yield return new WaitForSeconds(1f / frames);
+            yield return new WaitForSeconds(0.3f / frames);
         }
     }
     #endregion

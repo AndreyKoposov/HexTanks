@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,6 +12,18 @@ public struct VectorHex
     public readonly int X => coords.x;
     public readonly int Y  => coords.y;
     public readonly bool Unsigned => coords == -Vector3Int.one;
+    public readonly HashSet<VectorHex> Neighbours
+    {
+        get => new()
+        {
+            this + Right,
+            this + Left,
+            this + RightBottom,
+            this + RightTop,
+            this + LeftBottom,
+            this + LeftTop,
+        };
+    }
 
     #region Directoins
     private readonly int Even => Mathf.Abs(Y) % 2;
@@ -29,18 +42,6 @@ public struct VectorHex
     public VectorHex(int x, int y)
     {
         coords = new(x, y, 0);
-    }
-    public HashSet<VectorHex> GetNeighbours()
-    {
-        return new()
-        {
-            this + Right,
-            this + Left,
-            this + RightBottom,
-            this + RightTop,
-            this + LeftBottom,
-            this + LeftTop,
-        };
     }
 
     #region Overrides

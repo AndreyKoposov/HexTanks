@@ -50,7 +50,7 @@ public class A_Star
 
             closedSet.Add(nextNode.position);
 
-            foreach (var neighbourPos in nextNode.position.GetNeighbours())
+            foreach (var neighbourPos in nextNode.position.Neighbours)
             {
                 if (closedSet.Contains(neighbourPos)) continue;
                 if (Game.World[neighbourPos].IsObstacle) continue;

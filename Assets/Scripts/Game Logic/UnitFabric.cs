@@ -10,20 +10,17 @@ public class UnitFabric : MonoBehaviour
         Unit unit = Instantiate(GetPrefab(type)).GetComponent<Unit>();
 
         unit.Setup(team);
-        tile.SetUnit(unit);
-        unit.SetPosition(tile);
+        tile.SetUnit(unit, true);
 
-        GlobalEventManager.UnitCreated.Invoke(tile.position);
+        GlobalEventManager.UnitCreated.Invoke(tile.Position);
     }
 
     public void DestroyUnitAt(HexTile tile)
     {
-        Unit unit = tile.unit;
-
-        tile.UnsetUnit();
+        Unit unit = tile.UnsetUnit();
         Destroy(unit.gameObject);
 
-        GlobalEventManager.UnitDestroyed.Invoke(tile.position);
+        GlobalEventManager.UnitDestroyed.Invoke(tile.Position);
     }
 
     private GameObject GetPrefab(UnitType type)

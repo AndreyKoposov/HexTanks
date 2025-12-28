@@ -46,7 +46,7 @@ public class MouseInteract : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out var hit, 20f, LayerMask.GetMask(L_GRID, L_HIGHLIGHT, L_UI)))
         {
-           var tile = hit.collider.gameObject.GetComponent<HexTile>().position;
+           var tile = hit.collider.gameObject.GetComponent<HexTile>().Position;
 
             if (!HoverExist || hoveredTile != tile)
             {
@@ -165,7 +165,7 @@ public class MouseInteract : MonoBehaviour
     }
     private void SelectBuilding()
     {
-        Building building = Game.World[selectedTile].obstacle as Building;
+        Building building = Game.World[selectedTile].Building;
 
         Game.UI.OpenBuildingPanel(building);
 
@@ -207,9 +207,7 @@ public class MouseInteract : MonoBehaviour
     private void DeselectOnUnitDestroy(Vector3Int unitPos)
     {
         if (selectedTile == unitPos)
-        {
             DeselectAllUnitTiles();
-        }
     }
     private void DeselectOnTurnChanged(Team _)
     {

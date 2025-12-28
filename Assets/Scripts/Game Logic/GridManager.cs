@@ -25,14 +25,14 @@ public class GridManager : MonoBehaviour
     {
         foreach (var cell in tilemap.GetComponentsInChildren<HexTile>())
         {
-            cell.position = (VectorHex)tilemap.WorldToCell(cell.transform.position);
-            map[cell.position] = cell;
+            cell.Setup((VectorHex)tilemap.WorldToCell(cell.transform.position));
+            map[cell.Position] = cell;
         }
 
         foreach (var obstacle in obstacles.GetComponentsInChildren<Obstacle>())
         {
             var pos = (VectorHex)tilemap.WorldToCell(obstacle.transform.position);
-            map[pos].SetObstacle(obstacle);
+            map[pos].Obstacle = obstacle;
         }
     }
 
@@ -41,7 +41,6 @@ public class GridManager : MonoBehaviour
         HexTile tile = map[position];
 
         if (tile.HasUnit) return;
-        //if (tile.IsObstacle) return;
 
         fabric.CreateUnitAt(tile, type, team);
     }
@@ -59,17 +58,13 @@ public class GridManager : MonoBehaviour
     {
         if (from == to) return;
 
-        var unit = map[from].unit;
-
-        map[from].UnsetUnit();
+        Unit unit = map[from].UnsetUnit();
         map[to].SetUnit(unit);
-
-        unit.MoveTo(map[to]);
     }
     public void AttackUnitAt(VectorHex attacking, VectorHex attacked)
     {
-        var attackingUnit = map[attacking].unit;
-        var attackedUnit = map[attacked].unit;
+        var attackingUnit = map[attacking].Unit;
+        var attackedUnit = map[attacked].Unit;
 
         attackingUnit.AttackUnit(attackedUnit);
 
@@ -80,7 +75,7 @@ public class GridManager : MonoBehaviour
     {
         List<VectorHex> result = new();
 
-        Unit unit = map[position].unit;
+        Unit unit = map[position].Unit;
 
         if (Game.CurrentPlayer != unit.Team || !unit.CanMove)
             return result;
@@ -96,12 +91,12 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidAttacksForUnit(VectorHex position)
     {
-        Unit unit = map[position].unit;
+        Unit unit = map[position].Unit;
 
         if (Game.CurrentPlayer != unit.Team || !unit.CanMove)
             return new();
 
-        List<VectorHex> result = position.GetNeighbours().Where(p => map[p].HasUnit && map[p].unit.Team != unit.Team).ToList();
+        List<VectorHex> result = position.GetNeighbours().Where(p => map[p].HasUnit && map[p].Unit.Team != unit.Team).ToList();
 
         return result;
     }

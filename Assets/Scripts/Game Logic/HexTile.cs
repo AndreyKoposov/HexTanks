@@ -5,14 +5,31 @@ using UnityEngine;
 public class HexTile : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer select;
+    [SerializeField] private bool isWater;
 
-    public VectorHex position;
-    public Unit unit;
-    public Obstacle obstacle;
-    public bool isWater;
+    private VectorHex position;
+    private Unit unit;
+    private Obstacle obstacle;
+
+    public Obstacle Obstacle
+    {
+        get => obstacle;
+        set 
+        {
+            obstacle = value;
+
+            if (obstacle is Building building)
+                building.position = position;
+        }
+    }
+    public Building Building
+    {
+        get => obstacle as Building;
+    }
 
     public bool IsObstacle => isWater || obstacle != null;
-
+    public VectorHex Position => position;
+    public Unit Unit => unit;
     public bool HasUnit
     {
         get { return unit != null; }
@@ -22,24 +39,22 @@ public class HexTile : MonoBehaviour
         get => obstacle != null && obstacle is Building;
     }
 
-    public void SetUnit(Unit unit)
+    public void Setup(VectorHex position)
+    {
+        this.position = position;
+    }
+
+    public void SetUnit(Unit unit, bool spawn = false)
     {
         this.unit = unit;
+        this.unit.MoveTo(this, spawn);
     }
-
-    public void SetObstacle(Obstacle obs)
+    public Unit UnsetUnit()
     {
-        obstacle = obs;
-        
-        if (obstacle is Building building)
-        {
-            building.position = position;
-        }
-    }
-
-    public void UnsetUnit()
-    {
+        var unsetted = unit;
         unit = null;
+
+        return unsetted;
     }
 
     public void SetLayer(string layerName)

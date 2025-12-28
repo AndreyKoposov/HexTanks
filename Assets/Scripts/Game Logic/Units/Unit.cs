@@ -20,30 +20,25 @@ public class Unit : MonoBehaviour
         RegisterOnEvents();
     }
 
-    public void Setup(Team Team)
+    public void Setup(Team team)
     {
-        team = Team;
+        SetTeam(team);
         hp = info.Hp;
         canMove = true;
         transform.rotation = Quaternion.identity;
-
-        if (team == Team.Player)
-            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
-        if (team == Team.Enemy)
-            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
     }
 
     #region Actions
-    public void MoveTo(HexTile to, bool force = false)
+    public void MoveTo(HexTile to, bool spawn)
     {
-        List<VectorHex> path = A_Star.FindShortestPath(position, to.position);
-
-        canMove = false;
-        if (force)
+        if (spawn)
             SetPosition(to);
         else
         {
+            List<VectorHex> path = A_Star.FindShortestPath(position, to.Position);
             StartCoroutine(MoveByPath(path));
+
+            canMove = false;
         }
     }
     public void AttackUnit(Unit attacked)
@@ -52,22 +47,29 @@ public class Unit : MonoBehaviour
 
         canMove = false;
     }
-    #endregion
-
-    #region Operations
-    public void SetPosition(HexTile to)
-    {
-        position = to.position;
-
-        gameObject.transform.parent = to.gameObject.transform;
-        transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
-    }
     public void DealDamage(int damage)
     {
         hp -= damage;
     }
     #endregion
 
+    #region Operations
+    private void SetPosition(HexTile to)
+    {
+        position = to.Position;
+
+        gameObject.transform.parent = to.gameObject.transform;
+        transform.localPosition = Vector3.zero - Vector3.forward * 0.09f;
+    }
+    private void SetTeam(Team team)
+    {
+        this.team = team;
+
+        if (team == Team.Player)
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
+        if (team == Team.Enemy)
+            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
+    }
     private IEnumerator MoveByPath(List<VectorHex> path)
     {
         foreach (VectorHex p in path)
@@ -76,6 +78,7 @@ public class Unit : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
     }
+    #endregion
 
     #region Events
     private void RegisterOnEvents()

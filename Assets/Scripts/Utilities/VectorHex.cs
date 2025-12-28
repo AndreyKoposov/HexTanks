@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Codice.Client.Common.WebApi.WebApiEndpoints;
@@ -28,6 +29,18 @@ public struct VectorHex
     public VectorHex(int x, int y)
     {
         coords = new(x, y, 0);
+    }
+    public HashSet<VectorHex> GetNeighbours()
+    {
+        return new()
+        {
+            this + Right,
+            this + Left,
+            this + RightBottom,
+            this + RightTop,
+            this + LeftBottom,
+            this + LeftTop,
+        };
     }
 
     #region Overrides

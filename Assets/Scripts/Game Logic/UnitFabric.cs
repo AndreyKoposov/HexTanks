@@ -11,6 +11,7 @@ public class UnitFabric : MonoBehaviour
 
         unit.Setup(team);
         tile.SetUnit(unit);
+        unit.SetPosition(tile);
 
         GlobalEventManager.UnitCreated.Invoke(tile.position);
     }

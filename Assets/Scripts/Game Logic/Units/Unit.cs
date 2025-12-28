@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -35,20 +36,23 @@ public class Unit : MonoBehaviour
     #region Actions
     public void MoveTo(HexTile to, bool force = false)
     {
-        Debug.Log($"From = {position}, To = {to.position}");
+        //Debug.Log($"From = {position}, To = {to.position}");
         List<VectorHex> path = A_Star.FindShortestPath(position, to.position);
-        if (path == null)
-            Debug.Log("Empty path!!!");
+        //if (path == null)
+        //    Debug.Log("Empty path!!!");
+        //else
+        //{
+        //    Debug.Log(path.Count);
+        //    foreach (var pos in path)
+        //        Debug.DrawRay(Game.World[pos].gameObject.transform.position, new(0, 5, 0), Color.red, 5f);
+        //}
+        canMove = false;
+        if (force)
+            SetPosition(to);
         else
         {
-            Debug.Log(path.Count);
-            foreach (var pos in path)
-                Debug.DrawRay(Game.World[pos].gameObject.transform.position, new(0, 5, 0), Color.red, 5f);
+            StartCoroutine(MoveByPath(path));
         }
-
-        SetPosition(to, force);
-
-        canMove = false;
     }
     public void AttackUnit(Unit attacked)
     {
@@ -59,7 +63,7 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region Operations
-    public void SetPosition(HexTile to, bool force = false)
+    public void SetPosition(HexTile to)
     {
         position = to.position;
 
@@ -71,6 +75,15 @@ public class Unit : MonoBehaviour
         hp -= damage;
     }
     #endregion
+
+    private IEnumerator MoveByPath(List<VectorHex> path)
+    {
+        foreach (VectorHex p in path)
+        {
+            SetPosition(Game.World[p]);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
 
     #region Events
     private void RegisterOnEvents()

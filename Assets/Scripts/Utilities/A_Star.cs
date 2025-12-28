@@ -1,17 +1,26 @@
+using System;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class A_Star
 {
-    public static float H(VectorHex from, VectorHex to)
+    private class Node : IComparable<Node>
     {
-        return (Game.World[to].transform.position - Game.World[from].transform.position).magnitude;
+        public Node parent;
+        public VectorHex position;
+        public float G;
+        public float H;
+        public float F => G + H;
+
+        public int CompareTo(Node other)
+        {
+            return F.CompareTo(other.F);
+        }
     }
 
     public static List<VectorHex> FindShortestPath(VectorHex from, VectorHex to, int maxIterations = 1000)
     {
         if (from == to)
-            throw new System.Exception("Same cell!!!");
+            throw new HexTankException("From equals To");
 
         var openSet = new SortedSet<Node>();
         var closedSet = new HashSet<VectorHex>();
@@ -51,7 +60,7 @@ public class A_Star
                     neighbourNode = new Node() { position = neighbourPos };
                     nodeCache[neighbourPos] = neighbourNode;
                 }
-                // cost = 0.8659766
+
                 if (nextNode.G < neighbourNode.G || !openSet.Contains(neighbourNode))
                 {
                     neighbourNode.parent = nextNode;
@@ -59,16 +68,22 @@ public class A_Star
                     neighbourNode.H = H(neighbourPos, to);
 
                     if (openSet.Contains(neighbourNode))
-                    {
                         openSet.Remove(neighbourNode);
-                    }
 
                     openSet.Add(neighbourNode);
                 }
             }
         }
 
-        return null;
+        if (iterations > maxIterations)
+            throw new HexTankException("Iterations limit reached");
+        else
+            throw new HexTankException("There is no path");
+    }
+
+    private static float H(VectorHex from, VectorHex to)
+    {
+        return (Game.World[to].transform.position - Game.World[from].transform.position).magnitude;
     }
 
     private static List<VectorHex> ReconstructPath(Node endNode)

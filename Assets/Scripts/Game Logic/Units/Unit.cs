@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static TMPro.SpriteAssetUtilities.TexturePacker_JsonArray;
 
 public class Unit : MonoBehaviour
 {
@@ -64,7 +63,8 @@ public class Unit : MonoBehaviour
         position = to.Position;
 
         gameObject.transform.parent = to.gameObject.transform;
-        transform.localPosition = OffsetOverTile;
+        //transform.localPosition = OffsetOverTile;
+        transform.localPosition = Vector3.zero;
     }
     private void SetTeam(Team team)
     {
@@ -77,11 +77,54 @@ public class Unit : MonoBehaviour
     }
     private IEnumerator MoveByPath(List<VectorHex> path)
     {
-        foreach (VectorHex p in path)
+        for (int i = 0; i < path.Count; i++)
         {
-            yield return Rotate(p);
-            yield return MoveByLine(Game.Grid[p].transform.position);
-            SetPosition(Game.Grid[p]);
+            VectorHex pos = path[i];
+            Vector3 tilePos = Game.Grid[pos].transform.position;
+
+            if (i == 0)
+            {
+                yield return Rotate(pos);
+                yield return MoveByLine(tilePos);
+            }
+            else
+            {
+                var tileLocalPos = transform.worldToLocalMatrix.MultiplyPoint(tilePos);
+                float h = (tileLocalPos).magnitude / 2;
+                Debug.Log((tileLocalPos).y);
+                float radius = h * 2 / Mathf.Sqrt(3);
+
+                if (tileLocalPos.z < -0.01f) // Left
+                {
+                    var point = radius / 2f * Vector3.right;
+                    point += h * 2 * Vector3.back;
+                    var pointGlobal = transform.localToWorldMatrix.MultiplyPoint(point);
+
+                    Debug.Log("Left");
+                    Debug.DrawRay(pointGlobal, Vector3.up, Color.red, 100f);
+
+                    yield return MoveByCircle(pointGlobal, Vector3.up, -1);
+                }
+                else
+                if (tileLocalPos.z > 0.01f) // Right
+                {
+                    var point = radius / 2f * Vector3.right;
+                    point += h * 2 * Vector3.forward;
+                    var pointGlobal = transform.localToWorldMatrix.MultiplyPoint(point);
+
+                    Debug.Log("Right");
+                    Debug.DrawRay(pointGlobal, Vector3.up, Color.red, 100f);
+
+                    yield return MoveByCircle(pointGlobal, Vector3.up, 1);
+                }
+                else                        // Center
+                {
+                    Debug.Log("Center");
+                    yield return MoveByLine(tilePos);
+                }
+            }
+
+            SetPosition(Game.Grid[path[i]]);
         }
     }
     private IEnumerator Rotate(VectorHex p)
@@ -121,7 +164,16 @@ public class Unit : MonoBehaviour
         for (int j = 0; j < frames; j++)
         {
             transform.Translate(delta / frames * Vector3.left, Space.Self);
-            yield return new WaitForSeconds(0.5f / frames);
+            yield return new WaitForSeconds(1f / frames);
+        }
+    }
+    private IEnumerator MoveByCircle(Vector3 point, Vector3 axis, int direction)
+    {
+        int frames = 20;
+        for (int j = 0; j < frames; j++)
+        {
+            transform.RotateAround(point, axis, direction * 60 / frames);
+            yield return new WaitForSeconds(1f / frames);
         }
     }
     #endregion

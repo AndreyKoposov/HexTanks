@@ -53,7 +53,7 @@ public class A_Star
             foreach (var neighbourPos in nextNode.position.Neighbours)
             {
                 if (closedSet.Contains(neighbourPos)) continue;
-                if (Game.World[neighbourPos].IsObstacle) continue;
+                if (Game.Grid[neighbourPos].IsObstacle) continue;
 
                 if (!nodeCache.TryGetValue(neighbourPos, out var neighbourNode))
                 {
@@ -83,7 +83,7 @@ public class A_Star
 
     private static float H(VectorHex from, VectorHex to)
     {
-        return (Game.World[to].transform.position - Game.World[from].transform.position).magnitude;
+        return (Game.Grid[to].transform.position - Game.Grid[from].transform.position).magnitude;
     }
 
     private static List<VectorHex> ReconstructPath(Node endNode)

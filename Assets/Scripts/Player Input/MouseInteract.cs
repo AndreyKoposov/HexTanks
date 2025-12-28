@@ -35,9 +35,9 @@ public class MouseInteract : MonoBehaviour
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.World.CreateUnitAt(hoveredTile, UnitType.Tank, Team.Player);
+            Game.Grid.CreateUnitAt(hoveredTile, UnitType.Tank, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
-            Game.World.DestroyUnitAt(hoveredTile);
+            Game.Grid.DestroyUnitAt(hoveredTile);
     }
 
     #region Main Logic
@@ -67,10 +67,10 @@ public class MouseInteract : MonoBehaviour
             if (validAttacks.Contains(hoveredTile))
                 UnitAttackCommand();
             else
-            if (Game.World[hoveredTile].HasUnit)
+            if (Game.Grid[hoveredTile].HasUnit)
                 UnitSelectCommand();
             else
-            if (Game.World[hoveredTile].HasBuilding)
+            if (Game.Grid[hoveredTile].HasBuilding)
                 BuildingSelectCommand();
             else
                 DeselectAll();
@@ -94,13 +94,13 @@ public class MouseInteract : MonoBehaviour
     }
     private void UnitMoveCommand()
     {
-        Game.World.MoveUnitFromTo(selectedTile, hoveredTile);
+        Game.Grid.MoveUnitFromTo(selectedTile, hoveredTile);
 
         DeselectAllUnitTiles();
     }
     private void UnitAttackCommand()
     {
-        Game.World.AttackUnitAt(selectedTile, hoveredTile);
+        Game.Grid.AttackUnitAt(selectedTile, hoveredTile);
 
         DeselectAllUnitTiles();
     }
@@ -110,62 +110,62 @@ public class MouseInteract : MonoBehaviour
     private void HighlightTile(VectorHex newTile)
     {
         hoveredTile = newTile;
-        Game.World[hoveredTile].SetLayer(L_HIGHLIGHT);
+        Game.Grid[hoveredTile].SetLayer(L_HIGHLIGHT);
     }
     private void UnhighlightTile()
     {
         if (!HoverExist) return;
 
-        Game.World[hoveredTile].SetLayer(L_GRID);
+        Game.Grid[hoveredTile].SetLayer(L_GRID);
         hoveredTile = VectorHex.UNSIGNED;
     }
     private void SelectTile()
     {
         selectedTile = hoveredTile;
-        Game.World[selectedTile].ApplySelect(SelectType.Default);
+        Game.Grid[selectedTile].ApplySelect(SelectType.Default);
     }
     private void DeselectTile()
     {
         if (!SelectExist) return;
 
-        Game.World[selectedTile].ApplySelect(SelectType.None);
+        Game.Grid[selectedTile].ApplySelect(SelectType.None);
         selectedTile = VectorHex.UNSIGNED;
     }
     private void SelectValidMoves()
     {
-        validMoves.AddRange(Game.World.GetValidMovesForUnit(selectedTile));
+        validMoves.AddRange(Game.Grid.GetValidMovesForUnit(selectedTile));
 
         foreach (var move in validMoves)
-            Game.World[move].ApplySelect(SelectType.Default);
+            Game.Grid[move].ApplySelect(SelectType.Default);
     }
     private void DeselectValidMoves()
     {
         if (validMoves.Count == 0) return;
 
         foreach (var move in validMoves)
-            Game.World[move].ApplySelect(SelectType.None);
+            Game.Grid[move].ApplySelect(SelectType.None);
 
         validMoves.Clear();
     }
     private void SelectValidAttacks()
     {
-        validAttacks.AddRange(Game.World.GetValidAttacksForUnit(selectedTile));
+        validAttacks.AddRange(Game.Grid.GetValidAttacksForUnit(selectedTile));
 
         foreach (var move in validAttacks)
-            Game.World[move].ApplySelect(SelectType.Attack);
+            Game.Grid[move].ApplySelect(SelectType.Attack);
     }
     private void DeselectValidAttacks()
     {
         if (validAttacks.Count == 0) return;
 
         foreach (var move in validAttacks)
-            Game.World[move].ApplySelect(SelectType.None);
+            Game.Grid[move].ApplySelect(SelectType.None);
 
         validAttacks.Clear();
     }
     private void SelectBuilding()
     {
-        Building building = Game.World[selectedTile].Building;
+        Building building = Game.Grid[selectedTile].Building;
 
         Game.UI.OpenBuildingPanel(building);
 

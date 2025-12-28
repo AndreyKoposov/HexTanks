@@ -36,7 +36,7 @@ public class Building : Obstacle
         turnsLeft--;
 
         if (turnsLeft <= 0)
-            Game.World.CreateUnitAt(position, unitToBuild, team);
+            Game.Grid.CreateUnitAt(position, unitToBuild, team);
 
         GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
     }

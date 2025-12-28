@@ -14,18 +14,18 @@ public class Game : MonoBehaviour
     }
     #endregion
 
-    [SerializeField] private GridManager world;
-    [SerializeField] private GameUI ui;
+    [SerializeField] private GridManager grid;
+    [SerializeField] private UIManager ui;
     [SerializeField] private ArtManager art;
 
     private int turn = 1;
     private Team team = Team.Player;
 
-    public static GridManager World
+    public static GridManager Grid
     {
-        get => Instance.world;
+        get => Instance.grid;
     }
-    public static GameUI UI
+    public static UIManager UI
     {
         get => Instance.ui;
     }

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class GameUI : MonoBehaviour
+public class UIManager : MonoBehaviour
 {
     [SerializeField] private TurnPanel turnPanel;
     [SerializeField] private BuildingPanel buildingPanel;

@@ -74,7 +74,7 @@ public class Unit : MonoBehaviour
     {
         foreach (VectorHex p in path)
         {
-            SetPosition(Game.World[p]);
+            SetPosition(Game.Grid[p]);
             yield return new WaitForSeconds(0.5f);
         }
     }

@@ -91,7 +91,7 @@ public class A_Star
         List<VectorHex> path = new();
         var nextNode = endNode;
 
-        while (nextNode != null)
+        while (nextNode.parent != null)
         {
             path.Add(nextNode.position);
             nextNode = nextNode.parent;

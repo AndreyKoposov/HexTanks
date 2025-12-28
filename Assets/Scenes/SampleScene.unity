@@ -5485,6 +5485,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4329692665430870823, guid: 4b193623179350846847c49e968a1023, type: 3}
   m_PrefabInstance: {fileID: 1188657696}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1195752625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1195752626}
+  m_Layer: 0
+  m_Name: === SCENE ===
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1195752626
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1195752625}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1215967759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6788,7 +6819,7 @@ GameObject:
   - component: {fileID: 1616741734}
   - component: {fileID: 1616741733}
   m_Layer: 0
-  m_Name: GameUI
+  m_Name: UIManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7979,7 +8010,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa6694de7e37db4a88e69f0da45903b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: {fileID: 243943276}
+  grid: {fileID: 243943276}
   ui: {fileID: 1616741733}
   art: {fileID: 1729706240}
 --- !u!4 &1860173162
@@ -8397,6 +8428,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4630536214824905255, guid: e6fd1b9453846d34383c333a5ba3ae81, type: 3}
   m_PrefabInstance: {fileID: 1965984665}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2003295529
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2003295530}
+  m_Layer: 0
+  m_Name: === LOGIC ===
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2003295530
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2003295529}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2015564779
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8525,6 +8587,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4630536214824905255, guid: e6fd1b9453846d34383c333a5ba3ae81, type: 3}
   m_PrefabInstance: {fileID: 2022611291}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2031331041
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2031331042}
+  m_Layer: 0
+  m_Name: === GUI ===
+  m_TagString: EditorOnly
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2031331042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2031331041}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2047421037
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9313,12 +9406,15 @@ CanvasRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 1195752626}
   - {fileID: 1718656364}
   - {fileID: 1552916886}
   - {fileID: 243943275}
+  - {fileID: 2003295530}
   - {fileID: 1860173162}
   - {fileID: 1616741734}
   - {fileID: 1729706241}
   - {fileID: 381706677}
+  - {fileID: 2031331042}
   - {fileID: 131764871}
   - {fileID: 1495974567}

@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class HexTile : MonoBehaviour
@@ -43,7 +41,6 @@ public class HexTile : MonoBehaviour
     {
         this.position = position;
     }
-
     public void SetUnit(Unit unit, bool spawn = false)
     {
         this.unit = unit;
@@ -56,12 +53,10 @@ public class HexTile : MonoBehaviour
 
         return unsetted;
     }
-
     public void SetLayer(string layerName)
     {
         gameObject.layer = LayerMask.NameToLayer(layerName);
     }
-
     public void ApplySelect(SelectType type)
     {
         switch (type)

@@ -1,7 +1,5 @@
-using Codice.Client.Common.GameUI;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MouseInteract : MonoBehaviour
 {

@@ -8,7 +8,17 @@ public class BuildingPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI unitLabel;
     [SerializeField] private Button buildButton;
 
-    public void Setup(Building building)
+    public void Open(Building building)
+    {
+        gameObject.SetActive(true);
+        Setup(building);
+    }
+    public void Close()
+    {
+        gameObject.SetActive(false);
+    }
+
+    private void Setup(Building building)
     {
         SetTurnsLeftLabel(building.TurnsLeft);
         SetUnitLabel(building.UnitToBuild);
@@ -16,7 +26,6 @@ public class BuildingPanel : MonoBehaviour
         buildButton.onClick.RemoveAllListeners();
         buildButton.onClick.AddListener(() => building.StartBuildUnit(UnitType.Tank));
     }
-
     private void SetTurnsLeftLabel(int turns)
     {
         turnsLeftLabel.text = $"Turn: {turns}";

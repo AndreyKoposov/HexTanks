@@ -4732,8 +4732,9 @@ GameObject:
   - component: {fileID: 1072233153}
   - component: {fileID: 1072233152}
   - component: {fileID: 1072233151}
+  - component: {fileID: 1072233154}
   m_Layer: 5
-  m_Name: MenuPanel
+  m_Name: TurnPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4825,6 +4826,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072233149}
   m_CullTransparentMesh: 1
+--- !u!114 &1072233154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072233149}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2cd3a726c8d08a74a87e7ac38aea1252, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  turnLabel: {fileID: 524948458}
+  playerLabel: {fileID: 1787096201}
 --- !u!1001 &1093591203
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6791,8 +6806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ebff0754984f2748afcfad79fcfe14d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  turnLabel: {fileID: 524948458}
-  playerLabel: {fileID: 1787096201}
+  turnPanel: {fileID: 1072233154}
   buildingPanel: {fileID: 425763919}
 --- !u!4 &1616741734
 Transform:

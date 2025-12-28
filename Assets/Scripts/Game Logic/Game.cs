@@ -16,9 +16,7 @@ public class Game : MonoBehaviour
 
     [SerializeField] private GridManager world;
     [SerializeField] private GameUI ui;
-
-    public Material playerMat;
-    public Material enemyMat;
+    [SerializeField] private ArtManager art;
 
     private int turn = 1;
     private Team team = Team.Player;
@@ -30,6 +28,10 @@ public class Game : MonoBehaviour
     public static GameUI UI
     {
         get => Instance.ui;
+    }
+    public static ArtManager Art
+    {
+        get => Instance.art;
     }
     public static Team CurrentPlayer
     {

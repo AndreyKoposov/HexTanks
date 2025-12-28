@@ -56,11 +56,11 @@ public class HexTile : MonoBehaviour
                 break;
             case SelectType.Default:
                 select.gameObject.SetActive(true);
-                select.color = Color.blue;
+                select.color = Game.Art.SelectColor;
                 break;
             case SelectType.Attack:
                 select.gameObject.SetActive(true);
-                select.color = Color.red;
+                select.color = Game.Art.AttackColor;
                 break;
         }
     }

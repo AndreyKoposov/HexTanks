@@ -7249,6 +7249,54 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!1 &1729706239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1729706241}
+  - component: {fileID: 1729706240}
+  m_Layer: 0
+  m_Name: ArtManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1729706240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729706239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e19bad6b7cfb3f4d976240e10d15abb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerMat: {fileID: 2100000, guid: b7256670e7e8fe64398e37381895eb25, type: 2}
+  enemyMat: {fileID: 2100000, guid: ed378dc5821139f41b62a706cbcfed3f, type: 2}
+  selectColor: {r: 1, g: 0.9796836, b: 0.41037738, a: 0.5019608}
+  attackColor: {r: 1, g: 0.31186232, b: 0, a: 0.5019608}
+--- !u!4 &1729706241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1729706239}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1735337708
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7919,8 +7967,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 243943276}
   ui: {fileID: 1616741733}
-  playerMat: {fileID: 2100000, guid: b7256670e7e8fe64398e37381895eb25, type: 2}
-  enemyMat: {fileID: 2100000, guid: ed378dc5821139f41b62a706cbcfed3f, type: 2}
+  art: {fileID: 1729706240}
 --- !u!4 &1860173162
 Transform:
   m_ObjectHideFlags: 0
@@ -9257,6 +9304,7 @@ SceneRoots:
   - {fileID: 243943275}
   - {fileID: 1860173162}
   - {fileID: 1616741734}
+  - {fileID: 1729706241}
   - {fileID: 381706677}
   - {fileID: 131764871}
   - {fileID: 1495974567}

@@ -28,24 +28,16 @@ public class Unit : MonoBehaviour
         transform.rotation = Quaternion.identity;
 
         if (team == Team.Player)
-            GetComponent<MeshRenderer>().material = Game.Instance.playerMat;
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
         if (team == Team.Enemy)
-            GetComponent<MeshRenderer>().material = Game.Instance.enemyMat;
+            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
     }
 
     #region Actions
     public void MoveTo(HexTile to, bool force = false)
     {
-        //Debug.Log($"From = {position}, To = {to.position}");
         List<VectorHex> path = A_Star.FindShortestPath(position, to.position);
-        //if (path == null)
-        //    Debug.Log("Empty path!!!");
-        //else
-        //{
-        //    Debug.Log(path.Count);
-        //    foreach (var pos in path)
-        //        Debug.DrawRay(Game.World[pos].gameObject.transform.position, new(0, 5, 0), Color.red, 5f);
-        //}
+
         canMove = false;
         if (force)
             SetPosition(to);

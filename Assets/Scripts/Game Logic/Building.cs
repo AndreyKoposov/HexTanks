@@ -17,9 +17,9 @@ public class Building : Obstacle
     private void Start()
     {
         if (team == Team.Player)
-            GetComponent<MeshRenderer>().material = Game.Instance.playerMat;
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
         if (team == Team.Enemy)
-            GetComponent<MeshRenderer>().material = Game.Instance.enemyMat;
+            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
     }
 
     public void StartBuildUnit(UnitType type)

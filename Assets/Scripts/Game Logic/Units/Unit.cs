@@ -17,6 +17,7 @@ public class Unit : MonoBehaviour
     protected int hp;
     protected int movePoints;
     protected int attackPoints;
+    protected List<VectorHex> attackedUnits = new();
 
     public bool CanMove => movePoints > 0 && attackPoints == info.AttackPoints;
     public bool CanAttack => attackPoints > 0 && movePoints == info.MovementDistance;
@@ -53,10 +54,10 @@ public class Unit : MonoBehaviour
     }
     public bool CanAttackTile(HexTile tile)
     {
-        if (!tile.HasUnit || tile.Unit.Team == team)
+        if (!tile.HasUnit || tile.Unit.Team == team || attackedUnits.Contains(tile.Position))
             return false;
 
-        if (position - tile.Position <= 1)
+        if (position - tile.Position <= info.MinAttackDistance)
             return false;
 
         return true;
@@ -93,6 +94,7 @@ public class Unit : MonoBehaviour
         void preAction()
         {
             attackPoints--;
+            attackedUnits.Add(attacked.Position);
         }
         void postAction()
         {
@@ -213,6 +215,7 @@ public class Unit : MonoBehaviour
     {
         movePoints = info.MovementDistance;
         attackPoints = info.AttackPoints;
+        attackedUnits.Clear();
     }
     #endregion
 }

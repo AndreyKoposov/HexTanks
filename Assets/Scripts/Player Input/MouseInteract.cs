@@ -36,6 +36,8 @@ public class MouseInteract : MonoBehaviour
             Game.Grid.CreateUnitAt(hoveredTile, UnitType.Infantry, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.H))
             Game.Grid.CreateUnitAt(hoveredTile, UnitType.Heavy, Team.Player);
+        if (HoverExist && Input.GetKeyDown(KeyCode.C))
+            Game.Grid.CreateUnitAt(hoveredTile, UnitType.Scout, Team.Player);
 
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             Game.Grid.DestroyUnitAt(hoveredTile);

@@ -19,32 +19,18 @@ public class Infantry : Unit
 
     protected IEnumerator RotateTower(Unit attacked)
     {
-        var p = attacked.Position;
         int frames = 20;
-        float targetAngle = 0;
 
-        if (p == position + position.Left)
-            targetAngle = 0;
-        if (p == position + position.LeftBottom)
-            targetAngle = -60;
-        if (p == position + position.RightBottom)
-            targetAngle = -120;
-        if (p == position + position.Right)
-            targetAngle = -180;
-        if (p == position + position.RightTop)
-            targetAngle = -240;
-        if (p == position + position.LeftTop)
-            targetAngle = -300;
+        var tilePos = Game.Grid[attacked.Position].transform.position;
 
-        var delta = targetAngle - tower.transform.rotation.eulerAngles.y;
+        Vector3 lookDirection = tower.transform.forward;
+        Vector3 targetDirection = (new Vector3(tilePos.x, transform.position.y, tilePos.z) - transform.position).normalized;
+        float targetAngle = Vector3.SignedAngle(lookDirection, targetDirection, Vector3.up);
 
-        if (Mathf.Abs(delta) > Mathf.Abs(delta + 360))
-            delta += 360;
-
-        if (Mathf.Abs(delta) > 0.01f)
+        if (Mathf.Abs(targetAngle) > 0.01f)
             for (int j = 0; j < frames; j++)
             {
-                tower.transform.Rotate(Vector3.up, delta / frames);
+                tower.transform.Rotate(Vector3.up, targetAngle / frames);
                 yield return new WaitForSeconds(0.2f / frames);
             }
 

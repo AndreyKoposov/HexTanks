@@ -868,7 +868,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemap: {fileID: 452773956}
   obstacles: {fileID: 1184870505}
-  fabric: {fileID: 381706678}
 --- !u!1001 &256824379
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8015,6 +8014,7 @@ MonoBehaviour:
   grid: {fileID: 243943276}
   ui: {fileID: 1616741733}
   art: {fileID: 1729706240}
+  fabric: {fileID: 381706678}
 --- !u!4 &1860173162
 Transform:
   m_ObjectHideFlags: 0

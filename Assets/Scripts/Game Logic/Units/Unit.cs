@@ -57,8 +57,8 @@ public class Unit : MonoBehaviour
 
         void preAction()
         {
-            position = to.Position;
             movePoints -= position - to.Position;
+            position = to.Position;
         }
         void postAction()
         {

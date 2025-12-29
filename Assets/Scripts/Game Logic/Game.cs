@@ -17,6 +17,7 @@ public class Game : MonoBehaviour
     [SerializeField] private GridManager grid;
     [SerializeField] private UIManager ui;
     [SerializeField] private ArtManager art;
+    [SerializeField] private UnitFabric fabric;
 
     private int turn = 1;
     private Team team = Team.Player;
@@ -33,6 +34,11 @@ public class Game : MonoBehaviour
     {
         get => Instance.art;
     }
+    public static UnitFabric Fabric
+    {
+        get => Instance.fabric;
+    }
+
     public static Team CurrentPlayer
     {
         get => Instance.team;

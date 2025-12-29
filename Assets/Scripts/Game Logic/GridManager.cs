@@ -8,7 +8,6 @@ public class GridManager : MonoBehaviour
 {
     [SerializeField] private Tilemap tilemap;
     [SerializeField] private Tilemap obstacles;
-    [SerializeField] private UnitFabric fabric;
 
     private readonly Dictionary<VectorHex, HexTile> map = new();
 
@@ -17,10 +16,6 @@ public class GridManager : MonoBehaviour
         get => map[vh];
     }
 
-    private void Awake()
-    {
-        RegisterOnEvents();
-    }
     private void Start()
     {
         InitMap();
@@ -40,24 +35,6 @@ public class GridManager : MonoBehaviour
         }
     }
 
-    public void CreateUnitAt(VectorHex position, UnitType type, Team team)
-    {
-        HexTile tile = map[position];
-
-        if (tile.HasUnit) return;
-
-        fabric.CreateUnitAt(tile, type, team);
-    }
-
-    public void DestroyUnitAt(VectorHex position)
-    {
-        HexTile tile = map[position];
-
-        if (!tile.HasUnit) return;
-
-        fabric.DestroyUnitAt(tile);
-    }
-
     public void MoveUnitFromTo(VectorHex from, VectorHex to)
     {
         if (from == to) return;
@@ -71,9 +48,6 @@ public class GridManager : MonoBehaviour
         var attackedUnit = map[attacked].Unit;
 
         attackingUnit.AttackUnit(attackedUnit);
-
-        //if (attackedUnit.Dead)
-        //    fabric.DestroyUnitAt(map[attacked]);
     }
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
@@ -118,17 +92,4 @@ public class GridManager : MonoBehaviour
 
         return prevRing;
     }
-
-    #region Events
-    private void RegisterOnEvents()
-    {
-        GlobalEventManager.UnitDied.AddListener(DestroyUnitOnDied);
-    }
-    private void DestroyUnitOnDied(VectorHex unitPos)
-    {
-        HexTile tile = map[unitPos];
-
-        fabric.DestroyUnitAt(tile);
-    }
-    #endregion
 }

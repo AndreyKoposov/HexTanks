@@ -33,14 +33,14 @@ public class MouseInteract : MonoBehaviour
         CheckClick();
 
         if (HoverExist && Input.GetKeyDown(KeyCode.I))
-            Game.Grid.CreateUnitAt(hoveredTile, UnitType.Infantry, Team.Player);
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Infantry, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.H))
-            Game.Grid.CreateUnitAt(hoveredTile, UnitType.Heavy, Team.Player);
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Heavy, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
-            Game.Grid.CreateUnitAt(hoveredTile, UnitType.Scout, Team.Player);
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Scout, Team.Player);
 
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
-            Game.Grid.DestroyUnitAt(hoveredTile);
+            GlobalEventManager.UnitDied.Invoke(hoveredTile);
     }
 
     #region Main Logic
@@ -204,10 +204,10 @@ public class MouseInteract : MonoBehaviour
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.UnitDestroyed.AddListener(DeselectOnUnitDestroy);
+        GlobalEventManager.UnitDied.AddListener(DeselectOnUnitDied);
         GlobalEventManager.EndTurn.AddListener(DeselectOnTurnChanged);
     } 
-    private void DeselectOnUnitDestroy(VectorHex unitPos)
+    private void DeselectOnUnitDied(VectorHex unitPos)
     {
         if (selectedTile == unitPos)
             DeselectAllUnitTiles();

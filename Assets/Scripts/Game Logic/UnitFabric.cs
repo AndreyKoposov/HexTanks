@@ -5,26 +5,34 @@ public class UnitFabric : MonoBehaviour
 {
     [SerializeField] private List<GameObject> prefabs = new();
 
-    public void CreateUnitAt(HexTile tile, UnitType type, Team team)
+    private void Awake()
+    {
+        RegisterOnEvents();
+    }
+
+    public void CreateUnitAt(VectorHex position, UnitType type, Team team)
     {
         Unit unit = Instantiate(GetPrefab(type)).GetComponent<Unit>();
 
         unit.Setup(team);
-        tile.SetUnit(unit, true);
-
-        GlobalEventManager.UnitCreated.Invoke(tile.Position);
+        Game.Grid[position].SetUnit(unit, true);
     }
 
-    public void DestroyUnitAt(HexTile tile)
+    public void DestroyUnitAt(VectorHex position)
     {
-        Unit unit = tile.UnsetUnit();
+        Unit unit = Game.Grid[position].UnsetUnit();
         Destroy(unit.gameObject);
-
-        GlobalEventManager.UnitDestroyed.Invoke(tile.Position);
     }
 
     private GameObject GetPrefab(UnitType type)
     {
         return prefabs.Find(p => p.GetComponent<Unit>().Info.Type == type);
     }
+
+    #region Events
+    private void RegisterOnEvents()
+    {
+        GlobalEventManager.UnitDied.AddListener(DestroyUnitAt);
+    }
+    #endregion
 }

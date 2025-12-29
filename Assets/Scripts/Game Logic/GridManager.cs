@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class GridManager : MonoBehaviour
         get => map[vh];
     }
 
+    private void Awake()
+    {
+        RegisterOnEvents();
+    }
     private void Start()
     {
         InitMap();
@@ -67,8 +72,8 @@ public class GridManager : MonoBehaviour
 
         attackingUnit.AttackUnit(attackedUnit);
 
-        if (attackedUnit.Dead)
-            fabric.DestroyUnitAt(map[attacked]);
+        //if (attackedUnit.Dead)
+        //    fabric.DestroyUnitAt(map[attacked]);
     }
     public List<VectorHex> GetValidMovesForUnit(VectorHex position)
     {
@@ -113,4 +118,17 @@ public class GridManager : MonoBehaviour
 
         return prevRing;
     }
+
+    #region Events
+    private void RegisterOnEvents()
+    {
+        GlobalEventManager.UnitDied.AddListener(DestroyUnitOnDied);
+    }
+    private void DestroyUnitOnDied(VectorHex unitPos)
+    {
+        HexTile tile = map[unitPos];
+
+        fabric.DestroyUnitAt(tile);
+    }
+    #endregion
 }

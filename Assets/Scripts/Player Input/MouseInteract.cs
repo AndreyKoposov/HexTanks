@@ -207,7 +207,7 @@ public class MouseInteract : MonoBehaviour
         GlobalEventManager.UnitDestroyed.AddListener(DeselectOnUnitDestroy);
         GlobalEventManager.EndTurn.AddListener(DeselectOnTurnChanged);
     } 
-    private void DeselectOnUnitDestroy(Vector3Int unitPos)
+    private void DeselectOnUnitDestroy(VectorHex unitPos)
     {
         if (selectedTile == unitPos)
             DeselectAllUnitTiles();

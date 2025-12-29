@@ -21,7 +21,6 @@ public class Unit : MonoBehaviour
     protected int movePoints;
     protected int attackPoints;
 
-    public bool Dead => hp <= 0;
     public bool CanMove => movePoints > 0 && attackPoints == info.AttackPoints;
     public bool CanAttack => attackPoints > 0 && movePoints == info.MovementDistance;
 
@@ -95,11 +94,16 @@ public class Unit : MonoBehaviour
         {
             hp -= damage;
         }
+        void postAction()
+        {
+            if (hp <= 0)
+                GlobalEventManager.UnitDied.Invoke(position);
+        }
 
         StartCoroutine(Job(
             preAction,
             () => AnimateDamage(),
-            () => {}
+            postAction
         ));
     }
     #endregion
@@ -168,7 +172,7 @@ public class Unit : MonoBehaviour
         if (Mathf.Abs(targetAngle) > 0.1f)
         for (int i = 0; i < Frames; i++)
         {
-            transform.Rotate(Vector3.up, targetAngle / Frames);
+            part.transform.Rotate(Vector3.up, targetAngle / Frames);
             yield return new WaitForSeconds(RotationSpeed / Frames);
         }
     }

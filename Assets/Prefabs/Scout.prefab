@@ -293,6 +293,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info: {fileID: 11400000, guid: 6c852efe35191f5439cb801d192780d7, type: 2}
+  colorParts:
+  - {fileID: 7333198536524896785}
 --- !u!1 &4682846823382214321
 GameObject:
   m_ObjectHideFlags: 0

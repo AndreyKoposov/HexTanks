@@ -671,4 +671,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   info: {fileID: 11400000, guid: fb40ee027af6a5441a18070377c2cb26, type: 2}
+  colorParts:
+  - {fileID: 2452191517988098366}
   tower: {fileID: 866238671262542422}

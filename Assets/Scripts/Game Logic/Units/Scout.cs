@@ -4,35 +4,16 @@ using UnityEngine;
 
 public class Scout : Unit
 {
-    public override void AttackUnit(Unit attacked)
+    protected override IEnumerator AnimateAttack(Unit attacked)
     {
-        StartCoroutine(RotateAndAttack(attacked));
+        yield return RotateTo(transform, Game.Grid[attacked.Position].transform.position);
     }
-    public override void MoveTo(HexTile to, bool spawn)
+    protected override IEnumerator AnimateMove(List<VectorHex> path)
     {
-        if (spawn)
-            SetGlobalPositionTo(to);
-        else
-        {
-            List<VectorHex> path = new() { to.Position };
-            StartCoroutine(MoveByPath(path));
-
-            movePoints -= path.Count;
-        }
-
-        position = to.Position;
+        yield return MoveByPath(path);
     }
-
-    protected override void SetGlobalPositionTo(HexTile to)
+    protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {
-        base.SetGlobalPositionTo(to);
-        transform.position += 10 * OffsetOverTile;
-    }
-
-    private IEnumerator RotateAndAttack(Unit attacked)
-    {
-        yield return RotateTo(Game.Grid[attacked.Position].transform.position);
-
-        base.AttackUnit(attacked);
+        return new() { to };
     }
 }

@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Unit : MonoBehaviour
@@ -10,6 +12,7 @@ public class Unit : MonoBehaviour
     protected static float RotationSpeed = 0.2f;
 
     public UnitInfo info;
+    public List<MeshRenderer> colorParts = new();
 
     protected Team team;
     protected VectorHex position;
@@ -27,7 +30,7 @@ public class Unit : MonoBehaviour
     public int MovePoints => movePoints;
     public UnitInfo Info => info;
 
-    private void Awake()
+    protected void Awake()
     {
         RegisterOnEvents();
     }
@@ -44,34 +47,90 @@ public class Unit : MonoBehaviour
     }
 
     #region Actions
-    public virtual void MoveTo(HexTile to, bool spawn)
+    public void SpawnAt(HexTile tile)
     {
-        if (spawn)
-            SetGlobalPositionTo(to);
-        else
-        {
-            List<VectorHex> path = A_Star.FindShortestPath(position, to.Position);
-            StartCoroutine(MoveByPath(path));
+        position = tile.Position;
+        SetGlobalPositionTo(tile);
+    }
+    public void MoveTo(HexTile to)
+    {
+        var path = FindPath(position, to.Position);
 
+        void preAction()
+        {
+            position = to.Position;
             movePoints -= position - to.Position;
         }
+        void postAction()
+        {
+            SetGlobalPositionTo(to);
+        }
 
-        position = to.Position;
+        StartCoroutine(Job(
+            preAction,
+            () => AnimateMove(path),
+            postAction
+        ));
     }
-    public virtual void AttackUnit(Unit attacked)
+    public void AttackUnit(Unit attacked)
     {
-        attacked.DealDamage(info.Damage);
+        void preAction()
+        {
+            attackPoints--;
+        }
+        void postAction()
+        {
+            attacked.DealDamage(info.Damage);
+        }
 
-        attackPoints--;
+        StartCoroutine(Job(
+            preAction,
+            () => AnimateAttack(attacked),
+            postAction
+        ));
     }
-    public virtual void DealDamage(int damage)
+    public void DealDamage(int damage)
     {
-        hp -= damage;
+        void preAction()
+        {
+            hp -= damage;
+        }
+
+        StartCoroutine(Job(
+            preAction,
+            () => AnimateDamage(),
+            () => {}
+        ));
+    }
+    #endregion
+
+    #region Virtuals
+    protected virtual IEnumerator AnimateMove(List<VectorHex> path)
+    {
+        yield return MoveByPath(path);
+    }
+    protected virtual IEnumerator AnimateAttack(Unit attacked)
+    {
+        yield return null;
+    }
+    protected virtual IEnumerator AnimateDamage()
+    {
+        yield return null;
+    }
+    protected virtual List<VectorHex> FindPath(VectorHex from, VectorHex to)
+    {
+        return A_Star.FindShortestPath(from, to);
     }
     #endregion
 
     #region Operations
-    protected virtual void SetGlobalPositionTo(HexTile to)
+    protected IEnumerator Job(Action preAction, Func<IEnumerator> animation, Action postAction)
+    {
+        preAction();
+        yield return animation();
+        postAction();
+    }
+    protected void SetGlobalPositionTo(HexTile to)
     {
         transform.position = to.gameObject.transform.position;
         transform.position += OffsetOverTile;
@@ -80,10 +139,14 @@ public class Unit : MonoBehaviour
     {
         this.team = team;
 
-        //if (team == Team.Player)
-        //    GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
-        //if (team == Team.Enemy)
-        //    GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
+        Material materialToSet;
+        if (team == Team.Player)
+            materialToSet = Game.Art.PlayerMat;
+        else
+            materialToSet = Game.Art.EnemyMat;
+
+        foreach (var part in colorParts)
+            part.material = materialToSet;
     }
     protected IEnumerator MoveByPath(List<VectorHex> path)
     {
@@ -91,23 +154,23 @@ public class Unit : MonoBehaviour
         {
             Vector3 tilePos = Game.Grid[p].transform.position;
 
-            yield return RotateTo(tilePos);
+            yield return RotateTo(transform, tilePos);
             yield return MoveByLineTo(tilePos);
         }
     }
-    protected IEnumerator RotateTo(Vector3 point)
+    protected IEnumerator RotateTo(Transform part, Vector3 point)
     {
-        Vector3 lookDirection = transform.forward;
-        Vector3 targetDirection = (new Vector3(point.x, transform.position.y, point.z) - transform.position).normalized;
+        Vector3 lookDirection = part.forward;
+        Vector3 targetDirection = (new Vector3(point.x, part.position.y, point.z) - part.position).normalized;
 
         float targetAngle = Vector3.SignedAngle(lookDirection, targetDirection, Vector3.up);
 
-        if (Mathf.Abs(targetAngle) > 0.01f)
-            for (int i = 0; i < Frames; i++)
-            {
-                transform.Rotate(Vector3.up, targetAngle / Frames);
-                yield return new WaitForSeconds(RotationSpeed / Frames);
-            }
+        if (Mathf.Abs(targetAngle) > 0.1f)
+        for (int i = 0; i < Frames; i++)
+        {
+            transform.Rotate(Vector3.up, targetAngle / Frames);
+            yield return new WaitForSeconds(RotationSpeed / Frames);
+        }
     }
     protected IEnumerator MoveByLineTo(Vector3 point)
     {

@@ -44,7 +44,11 @@ public class HexTile : MonoBehaviour
     public void SetUnit(Unit unit, bool spawn = false)
     {
         this.unit = unit;
-        this.unit.MoveTo(this, spawn);
+
+        if (spawn)
+            this.unit.SpawnAt(this);
+        else
+            this.unit.MoveTo(this);
     }
     public Unit UnsetUnit()
     {

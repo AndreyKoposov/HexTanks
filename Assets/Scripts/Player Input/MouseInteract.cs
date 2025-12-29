@@ -38,6 +38,8 @@ public class MouseInteract : MonoBehaviour
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Heavy, Team.Player);
         if (HoverExist && Input.GetKeyDown(KeyCode.C))
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Scout, Team.Player);
+        if (HoverExist && Input.GetKeyDown(KeyCode.R))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Artillery, Team.Player);
 
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             GlobalEventManager.UnitDied.Invoke(hoveredTile);

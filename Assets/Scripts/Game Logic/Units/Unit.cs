@@ -56,7 +56,7 @@ public class Unit : MonoBehaviour
         if (!tile.HasUnit || tile.Unit.Team == team)
             return false;
 
-        if (tile.Position - position <= info.MinAttackDistance)
+        if (position - tile.Position <= 1)
             return false;
 
         return true;

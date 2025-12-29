@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -40,6 +41,14 @@ public struct VectorHex
     {
         coords = new(x, y, 0);
     }
+    public readonly Vector3Int ToCube()
+    {
+        int q = X - (Y - (Y & 1)) / 2;
+        int r = Y;
+        int s = -q - r;
+
+        return new(q, r, s);
+    }
 
     #region Overrides
     public static implicit operator Vector3Int(VectorHex vh) => vh.coords;
@@ -47,9 +56,10 @@ public struct VectorHex
     public static VectorHex operator +(VectorHex vh1, VectorHex vh2) => (VectorHex)(vh1.coords + vh2.coords);
     public static int operator -(VectorHex vh1, VectorHex vh2)
     {
-        var delta = vh2.coords - vh1.coords;
+        var vhc1 = vh1.ToCube();
+        var vhc2 = vh2.ToCube();
 
-        return Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
+        return (Math.Abs(vhc1.x - vhc2.x) + Math.Abs(vhc1.y - vhc2.y) + Math.Abs(vhc1.z - vhc2.z)) / 2;
     }
     public static bool operator ==(VectorHex vh1, VectorHex vh2) => vh1.Equals(vh2);
     public static bool operator !=(VectorHex vh1, VectorHex vh2) => !vh1.Equals(vh2);

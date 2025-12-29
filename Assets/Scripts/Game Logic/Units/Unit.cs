@@ -83,7 +83,7 @@ public class Unit : MonoBehaviour
             SetGlobalPositionTo(to);
         }
 
-        StartCoroutine(Job(
+        StartCoroutine(Wrapper(
             preAction,
             () => AnimateMove(path),
             postAction
@@ -101,7 +101,7 @@ public class Unit : MonoBehaviour
             attacked.DealDamage(info.Damage);
         }
 
-        StartCoroutine(Job(
+        StartCoroutine(Wrapper(
             preAction,
             () => AnimateAttack(attacked),
             postAction
@@ -119,7 +119,7 @@ public class Unit : MonoBehaviour
                 GlobalEventManager.UnitDied.Invoke(position);
         }
 
-        StartCoroutine(Job(
+        StartCoroutine(Wrapper(
             preAction,
             () => AnimateDamage(),
             postAction
@@ -147,7 +147,7 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region Operations
-    protected IEnumerator Job(Action preAction, Func<IEnumerator> animation, Action postAction)
+    protected IEnumerator Wrapper(Action preAction, Func<IEnumerator> animation, Action postAction)
     {
         preAction();
         yield return animation();

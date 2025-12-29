@@ -41,6 +41,26 @@ public class Unit : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
     }
+    public bool CanMoveThroughTile(HexTile tile)
+    {
+        if (tile.HasUnit && tile.Unit.Team != team)
+            return false;
+
+        if (!info.Flying && tile.IsObstacle)
+            return false;
+        
+        return true;
+    }
+    public bool CanAttackTile(HexTile tile)
+    {
+        if (!tile.HasUnit || tile.Unit.Team == team)
+            return false;
+
+        if (tile.Position - position <= info.MinAttackDistance)
+            return false;
+
+        return true;
+    }
 
     #region Actions
     public void SpawnAt(HexTile tile)

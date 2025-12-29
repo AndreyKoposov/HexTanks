@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -55,13 +56,17 @@ public class GridManager : MonoBehaviour
 
         Unit unit = map[position].Unit;
 
-        if (Game.CurrentPlayer != unit.Team || !unit.CanMove)
+        if (Game.CurrentPlayer != unit.Team)
+            return result;
+        if (!unit.CanMove)
             return result;
 
-        HashSet<VectorHex> positions = GetRing(new() { position }, unit.MovePoints);
+        HashSet<VectorHex> positions = GetRing(new() { position }, 
+                                               unit.MovePoints, 
+                                               unit.CanMoveThroughTile);
 
         foreach (VectorHex pos in positions)
-            if (map.Keys.Contains(pos) && !map[pos].HasUnit)
+            if (!map[pos].HasUnit)
                 result.Add(pos);
 
         return result;
@@ -69,26 +74,36 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidAttacksForUnit(VectorHex position)
     {
+        List<VectorHex> result = new();
+
         Unit unit = map[position].Unit;
 
-        if (Game.CurrentPlayer != unit.Team || !unit.CanAttack)
-            return new();
+        if (Game.CurrentPlayer != unit.Team)
+            return result;
+        if (!unit.CanAttack)
+            return result;
 
-        List<VectorHex> result = position.Neighbours.Where(p => map[p].HasUnit && map[p].Unit.Team != unit.Team).ToList();
+        HashSet<VectorHex> positions = GetRing(new() { position }, 
+                                               unit.Info.MaxAttackDistance, 
+                                               (_) => true);
+
+        foreach (VectorHex pos in positions)
+            if (unit.CanAttackTile(map[pos]))
+                result.Add(pos);
 
         return result;
     }
 
-    private HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter)
+    private HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter, Predicate<HexTile> filter)
     {
         if (iter <= 0)
             return prevRing;
 
         HashSet<VectorHex> res = new();
         foreach (var pos in prevRing)
-            res.UnionWith(pos.Neighbours.Where(p => !map[p].IsObstacle));
+            res.UnionWith(pos.Neighbours.Where(p => map.Keys.Contains(p) && filter(map[p])));
 
-        prevRing.UnionWith(GetRing(res, iter - 1));
+        prevRing.UnionWith(GetRing(res, iter - 1, filter));
 
         return prevRing;
     }

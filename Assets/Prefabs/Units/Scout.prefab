@@ -257,6 +257,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7526702098681741406}
   - component: {fileID: 2044543063263447944}
+  - component: {fileID: -3472032912960567325}
   m_Layer: 0
   m_Name: Scout
   m_TagString: Untagged
@@ -295,6 +296,27 @@ MonoBehaviour:
   info: {fileID: 11400000, guid: 6c852efe35191f5439cb801d192780d7, type: 2}
   colorParts:
   - {fileID: 7333198536524896785}
+--- !u!95 &-3472032912960567325
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4314219961819552555}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b322f90f4c5d37048acf60bf0c9d4fbd, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4682846823382214321
 GameObject:
   m_ObjectHideFlags: 0

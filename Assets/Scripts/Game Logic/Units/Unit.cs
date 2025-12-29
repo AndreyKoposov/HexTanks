@@ -5,17 +5,18 @@ using UnityEngine;
 public class Unit : MonoBehaviour
 {
     protected static Vector3 OffsetOverTile = Vector3.up * 0.09f;
+    protected static int Frames = 25;
+    protected static float MoveSpeed = 0.3f;
+    protected static float RotationSpeed = 0.2f;
 
     public UnitInfo info;
 
-    protected int hp;
     protected Team team;
     protected VectorHex position;
 
+    protected int hp;
     protected int movePoints;
     protected int attackPoints;
-
-    private VectorHex animationPos;
 
     public bool Dead => hp <= 0;
     public bool CanMove => movePoints > 0 && attackPoints == info.AttackPoints;
@@ -24,6 +25,7 @@ public class Unit : MonoBehaviour
     public Team Team => team;
     public VectorHex Position => position;
     public int MovePoints => movePoints;
+    public UnitInfo Info => info;
 
     private void Awake()
     {
@@ -45,13 +47,13 @@ public class Unit : MonoBehaviour
     public virtual void MoveTo(HexTile to, bool spawn)
     {
         if (spawn)
-            SetParent(to);
+            SetGlobalPositionTo(to);
         else
         {
             List<VectorHex> path = A_Star.FindShortestPath(position, to.Position);
             StartCoroutine(MoveByPath(path));
 
-            movePoints -= path.Count;
+            movePoints -= position - to.Position;
         }
 
         position = to.Position;
@@ -62,16 +64,15 @@ public class Unit : MonoBehaviour
 
         attackPoints--;
     }
-    public void DealDamage(int damage)
+    public virtual void DealDamage(int damage)
     {
         hp -= damage;
     }
     #endregion
 
     #region Operations
-    protected virtual void SetParent(HexTile to)
+    protected virtual void SetGlobalPositionTo(HexTile to)
     {
-        //gameObject.transform.parent = to.gameObject.transform;
         transform.position = to.gameObject.transform.position;
         transform.position += OffsetOverTile;
     }
@@ -86,40 +87,35 @@ public class Unit : MonoBehaviour
     }
     protected IEnumerator MoveByPath(List<VectorHex> path)
     {
-        animationPos = position;
         foreach (VectorHex p in path)
         {
-            yield return Rotate(p);
-            yield return MoveByLine(Game.Grid[p].transform.position);
-            SetParent(Game.Grid[p]);
-            animationPos = p;
+            Vector3 tilePos = Game.Grid[p].transform.position;
+
+            yield return RotateTo(tilePos);
+            yield return MoveByLineTo(tilePos);
         }
     }
-    protected IEnumerator Rotate(VectorHex p)
+    protected IEnumerator RotateTo(Vector3 point)
     {
-        int frames = 20;
-
-        var tilePos = Game.Grid[p].transform.position;
-
         Vector3 lookDirection = transform.forward;
-        Vector3 targetDirection = (new Vector3(tilePos.x, transform.position.y, tilePos.z) - transform.position).normalized;
+        Vector3 targetDirection = (new Vector3(point.x, transform.position.y, point.z) - transform.position).normalized;
+
         float targetAngle = Vector3.SignedAngle(lookDirection, targetDirection, Vector3.up);
 
         if (Mathf.Abs(targetAngle) > 0.01f)
-            for (int j = 0; j < frames; j++)
+            for (int i = 0; i < Frames; i++)
             {
-                transform.Rotate(Vector3.up, targetAngle / frames);
-                yield return new WaitForSeconds(0.2f / frames);
+                transform.Rotate(Vector3.up, targetAngle / Frames);
+                yield return new WaitForSeconds(RotationSpeed / Frames);
             }
     }
-    protected IEnumerator MoveByLine(Vector3 point)
+    protected IEnumerator MoveByLineTo(Vector3 point)
     {
-        int frames = 20;
         float delta = (transform.position - point).magnitude;
-        for (int j = 0; j < frames; j++)
+        for (int i = 0; i < Frames; i++)
         {
-            transform.Translate(delta / frames * Vector3.forward, Space.Self);
-            yield return new WaitForSeconds(0.3f / frames);
+            transform.Translate(delta / Frames * Vector3.forward, Space.Self);
+            yield return new WaitForSeconds(MoveSpeed / Frames);
         }
     }
     #endregion

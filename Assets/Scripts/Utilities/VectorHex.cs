@@ -45,7 +45,12 @@ public struct VectorHex
     public static implicit operator Vector3Int(VectorHex vh) => vh.coords;
     public static explicit operator VectorHex(Vector3Int v3) => new (v3);
     public static VectorHex operator +(VectorHex vh1, VectorHex vh2) => (VectorHex)(vh1.coords + vh2.coords);
-    public static VectorHex operator -(VectorHex vh1, VectorHex vh2) => (VectorHex)(vh1.coords - vh2.coords);
+    public static int operator -(VectorHex vh1, VectorHex vh2)
+    {
+        var delta = vh2.coords - vh1.coords;
+
+        return Mathf.Max(Mathf.Abs(delta.x), Mathf.Abs(delta.y));
+    }
     public static bool operator ==(VectorHex vh1, VectorHex vh2) => vh1.Equals(vh2);
     public static bool operator !=(VectorHex vh1, VectorHex vh2) => !vh1.Equals(vh2);
     public override readonly bool Equals(object obj)

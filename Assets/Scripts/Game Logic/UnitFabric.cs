@@ -25,6 +25,6 @@ public class UnitFabric : MonoBehaviour
 
     private GameObject GetPrefab(UnitType type)
     {
-        return prefabs.Find(p => p.GetComponent<Unit>().info.Type == type);
+        return prefabs.Find(p => p.GetComponent<Unit>().Info.Type == type);
     }
 }

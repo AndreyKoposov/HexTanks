@@ -9,7 +9,7 @@ public class Heavy : Unit
 
     private IEnumerator RotateAndAttack(Unit attacked)
     {
-        yield return Rotate(attacked.Position);
+        yield return RotateTo(Game.Grid[attacked.Position].transform.position);
 
         base.AttackUnit(attacked);
     }

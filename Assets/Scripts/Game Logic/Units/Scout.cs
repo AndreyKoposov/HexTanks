@@ -11,7 +11,7 @@ public class Scout : Unit
     public override void MoveTo(HexTile to, bool spawn)
     {
         if (spawn)
-            SetParent(to);
+            SetGlobalPositionTo(to);
         else
         {
             List<VectorHex> path = new() { to.Position };
@@ -23,15 +23,15 @@ public class Scout : Unit
         position = to.Position;
     }
 
-    protected override void SetParent(HexTile to)
+    protected override void SetGlobalPositionTo(HexTile to)
     {
-        base.SetParent(to);
+        base.SetGlobalPositionTo(to);
         transform.position += 10 * OffsetOverTile;
     }
 
     private IEnumerator RotateAndAttack(Unit attacked)
     {
-        yield return Rotate(attacked.Position);
+        yield return RotateTo(Game.Grid[attacked.Position].transform.position);
 
         base.AttackUnit(attacked);
     }

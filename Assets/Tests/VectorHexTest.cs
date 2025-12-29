@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -142,5 +143,64 @@ public class VectorHexTest
 
         // Assert
         Assert.AreEqual(false, res);
+    }
+    [Test]
+    public void DistanceBetween_1()
+    {
+        // Arrange
+        VectorHex vh1 = new(new(0, 0, 0));
+        List<VectorHex> neighbours = vh1.Neighbours.ToList();
+        int[] results = new int[neighbours.Count];
+
+        // Act
+        for (int i = 0; i < neighbours.Count; i++)
+        {
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+        }
+
+        // Assert
+        foreach (int res in results)
+            Assert.AreEqual(1, res);
+    }
+    [Test]
+    public void DistanceBetween_2()
+    {
+        // Arrange
+        VectorHex vh1 = new(new(-3, 3, 0));
+        List<VectorHex> neighbours = vh1.Neighbours.ToList();
+        int[] results = new int[neighbours.Count];
+
+        // Act
+        for (int i = 0; i < neighbours.Count; i++)
+        {
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+            results[i] = vh1 - neighbours[i];
+        }
+
+        // Assert
+        foreach (int res in results)
+            Assert.AreEqual(1, res);
+    }
+    [Test]
+    public void DistanceBetween_3()
+    {
+        // Arrange
+        VectorHex vh1 = new(new(0, 2, 0));
+        VectorHex vh2 = new(new(0, 0, 0));
+
+        // Act
+        var res = vh1 - vh2.Left;
+
+        // Assert
+        Assert.AreEqual(2, res);
     }
 }

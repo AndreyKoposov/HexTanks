@@ -6,7 +6,12 @@ public enum Team
 
 public enum UnitType
 {
-    Tank = 0,
+    Infantry = 0,
+    Heavy = 1,
+    Scout = 2,
+    Artillery = 3,
+    Defender = 4,
+    Transport = 5,
 }
 
 public enum SelectType

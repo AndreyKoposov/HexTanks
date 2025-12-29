@@ -4,20 +4,24 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    private static Vector3 OffsetOverTile = Vector3.zero - Vector3.forward * 0.09f;
+    protected static Vector3 OffsetOverTile = Vector3.zero - Vector3.forward * 0.09f;
 
     public UnitInfo info;
 
-    private int hp;
-    private Team team;
-    private VectorHex position;
-    private bool canMove;
+    protected int hp;
+    protected Team team;
+    protected VectorHex position;
 
-    private VectorHex currentDirection = VectorHex.UNSIGNED;
+    protected int movePoints;
+    protected int attackPoints;
 
     public bool Dead => hp <= 0;
-    public bool CanMove => canMove;
+    public bool CanMove => movePoints > 0 && attackPoints == info.AttackPoints;
+    public bool CanAttack => attackPoints > 0 && movePoints == info.MovementDistance;
+
     public Team Team => team;
+    public VectorHex Position => position;
+    public int MovePoints => movePoints;
 
     private void Awake()
     {
@@ -27,13 +31,16 @@ public class Unit : MonoBehaviour
     public void Setup(Team team)
     {
         SetTeam(team);
+
         hp = info.Hp;
-        canMove = true;
+        movePoints = info.MovementDistance;
+        attackPoints = info.AttackPoints;
+
         transform.rotation = Quaternion.identity;
     }
 
     #region Actions
-    public void MoveTo(HexTile to, bool spawn)
+    public virtual void MoveTo(HexTile to, bool spawn)
     {
         if (spawn)
             SetPosition(to);
@@ -42,14 +49,14 @@ public class Unit : MonoBehaviour
             List<VectorHex> path = A_Star.FindShortestPath(position, to.Position);
             StartCoroutine(MoveByPath(path));
 
-            canMove = false;
+            movePoints -= path.Count;
         }
     }
-    public void AttackUnit(Unit attacked)
+    public virtual void AttackUnit(Unit attacked)
     {
         attacked.DealDamage(info.Damage);
 
-        canMove = false;
+        attackPoints--;
     }
     public void DealDamage(int damage)
     {
@@ -58,14 +65,14 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region Operations
-    private void SetPosition(HexTile to)
+    protected void SetPosition(HexTile to)
     {
         position = to.Position;
 
         gameObject.transform.parent = to.gameObject.transform;
         transform.localPosition = OffsetOverTile;
     }
-    private void SetTeam(Team team)
+    protected void SetTeam(Team team)
     {
         this.team = team;
 
@@ -74,7 +81,7 @@ public class Unit : MonoBehaviour
         if (team == Team.Enemy)
             GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
     }
-    private IEnumerator MoveByPath(List<VectorHex> path)
+    protected IEnumerator MoveByPath(List<VectorHex> path)
     {
         foreach (VectorHex p in path)
         {
@@ -83,7 +90,7 @@ public class Unit : MonoBehaviour
             SetPosition(Game.Grid[p]);
         }
     }
-    private IEnumerator Rotate(VectorHex p)
+    protected IEnumerator Rotate(VectorHex p)
     {
         int frames = 20;
         float targetAngle = 0;
@@ -113,7 +120,7 @@ public class Unit : MonoBehaviour
                 yield return new WaitForSeconds(0.2f / frames);
             }
     }
-    private IEnumerator MoveByLine(Vector3 point)
+    protected IEnumerator MoveByLine(Vector3 point)
     {
         int frames = 20;
         float delta = (transform.position - point).magnitude;
@@ -126,13 +133,14 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region Events
-    private void RegisterOnEvents()
+    protected void RegisterOnEvents()
     {
         GlobalEventManager.TurnChanged.AddListener(ResetOnTurnChanged);
     }
-    private void ResetOnTurnChanged(int _)
+    protected void ResetOnTurnChanged(int _)
     {
-        canMove = true;
+        movePoints = info.MovementDistance;
+        attackPoints = info.AttackPoints;
     }
     #endregion
 }

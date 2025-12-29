@@ -9,6 +9,7 @@ public class UnitInfo : ScriptableObject
     [SerializeField] private int minAttackDistance = 0;
     [SerializeField] private int maxAttackDistance = 0;
     [SerializeField] private int movementDistance = 0;
+    [SerializeField] private int attackPoints = 0;
     [SerializeField] private bool flying = false;
 
     public int Hp => hp;
@@ -16,6 +17,7 @@ public class UnitInfo : ScriptableObject
     public int MinAttackDistance => minAttackDistance;
     public int MaxAttackDistance => maxAttackDistance;
     public int MovementDistance => movementDistance;
+    public int AttackPoints => attackPoints;
     public bool Flying => flying;
     public UnitType Type => type;
 }

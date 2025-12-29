@@ -79,7 +79,7 @@ public class GridManager : MonoBehaviour
         if (Game.CurrentPlayer != unit.Team || !unit.CanMove)
             return result;
 
-        HashSet<VectorHex> positions = GetRing(new() { position }, unit.info.MovementDistance);
+        HashSet<VectorHex> positions = GetRing(new() { position }, unit.MovePoints);
 
         foreach (VectorHex pos in positions)
             if (map.Keys.Contains(pos) && !map[pos].HasUnit)
@@ -92,7 +92,7 @@ public class GridManager : MonoBehaviour
     {
         Unit unit = map[position].Unit;
 
-        if (Game.CurrentPlayer != unit.Team || !unit.CanMove)
+        if (Game.CurrentPlayer != unit.Team || !unit.CanAttack)
             return new();
 
         List<VectorHex> result = position.Neighbours.Where(p => map[p].HasUnit && map[p].Unit.Team != unit.Team).ToList();

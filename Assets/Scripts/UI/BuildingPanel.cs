@@ -24,7 +24,7 @@ public class BuildingPanel : MonoBehaviour
         SetUnitLabel(building.UnitToBuild);
 
         buildButton.onClick.RemoveAllListeners();
-        buildButton.onClick.AddListener(() => building.StartBuildUnit(UnitType.Tank));
+        buildButton.onClick.AddListener(() => building.StartBuildUnit(UnitType.Infantry));
     }
     private void SetTurnsLeftLabel(int turns)
     {

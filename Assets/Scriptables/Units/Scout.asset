@@ -20,3 +20,6 @@ MonoBehaviour:
   movementDistance: 5
   attackPoints: 1
   flying: 1
+  offsetOverTile: 1
+  rotationSpeed: 0.2
+  moveSpeed: 0.3

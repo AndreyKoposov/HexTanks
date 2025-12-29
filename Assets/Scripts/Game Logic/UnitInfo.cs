@@ -3,6 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "NewUnit", menuName = "HexTanks/Unit")]
 public class UnitInfo : ScriptableObject
 {
+    [Header("Unit characteristics")]
     [SerializeField] private UnitType type;
     [SerializeField] private int hp = 0;
     [SerializeField] private int damage = 0;
@@ -12,6 +13,11 @@ public class UnitInfo : ScriptableObject
     [SerializeField] private int attackPoints = 0;
     [SerializeField] private bool flying = false;
 
+    [Header("Unit settings")]
+    [SerializeField] private float offsetOverTile = 0;
+    [SerializeField] private float rotationSpeed = 0;
+    [SerializeField] private float moveSpeed = 0;
+
     public int Hp => hp;
     public int Damage => damage;
     public int MinAttackDistance => minAttackDistance;
@@ -20,4 +26,8 @@ public class UnitInfo : ScriptableObject
     public int AttackPoints => attackPoints;
     public bool Flying => flying;
     public UnitType Type => type;
+
+    public float OffsetOverTile => offsetOverTile;
+    public float RotationSpeed => rotationSpeed;
+    public float MoveSpeed => moveSpeed;
 }

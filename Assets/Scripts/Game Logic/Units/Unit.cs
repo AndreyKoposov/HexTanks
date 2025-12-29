@@ -6,10 +6,7 @@ using UnityEngine;
 
 public class Unit : MonoBehaviour
 {
-    protected static Vector3 OffsetOverTile = Vector3.up * 0.09f;
     protected static int Frames = 25;
-    protected static float MoveSpeed = 0.3f;
-    protected static float RotationSpeed = 0.2f;
 
     public UnitInfo info;
     public List<MeshRenderer> colorParts = new();
@@ -137,7 +134,7 @@ public class Unit : MonoBehaviour
     protected void SetGlobalPositionTo(HexTile to)
     {
         transform.position = to.gameObject.transform.position;
-        transform.position += OffsetOverTile;
+        transform.position += Vector3.up * info.OffsetOverTile;
     }
     protected void SetTeam(Team team)
     {
@@ -173,7 +170,7 @@ public class Unit : MonoBehaviour
         for (int i = 0; i < Frames; i++)
         {
             part.transform.Rotate(Vector3.up, targetAngle / Frames);
-            yield return new WaitForSeconds(RotationSpeed / Frames);
+            yield return new WaitForSeconds(info.RotationSpeed / Frames);
         }
     }
     protected IEnumerator MoveByLineTo(Vector3 point)
@@ -182,7 +179,7 @@ public class Unit : MonoBehaviour
         for (int i = 0; i < Frames; i++)
         {
             transform.Translate(delta / Frames * Vector3.forward, Space.Self);
-            yield return new WaitForSeconds(MoveSpeed / Frames);
+            yield return new WaitForSeconds(info.MoveSpeed / Frames);
         }
     }
     #endregion

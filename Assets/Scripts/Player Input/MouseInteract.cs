@@ -44,6 +44,8 @@ public class MouseInteract : MonoBehaviour
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Artillery, team);
         if (HoverExist && Input.GetKeyDown(KeyCode.Alpha5))
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Defender, team);
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha6))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Transport, team);
 
         if (HoverExist && Input.GetKeyDown(KeyCode.F) &&
             Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender &&

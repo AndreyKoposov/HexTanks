@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73f481cd2dbedd943ac7b5ddd89a7338, type: 3}
+  m_Name: Transport
+  m_EditorClassIdentifier: 
+  type: 5
+  hp: 3
+  damage: 0
+  minAttackDistance: 0
+  maxAttackDistance: 0
+  movementDistance: 5
+  attackPoints: 0
+  flying: 1
+  offsetOverTile: 1
+  rotationSpeed: 0.2
+  moveSpeed: 0.3

@@ -84,8 +84,7 @@ public class GridManager : MonoBehaviour
             return result;
 
         HashSet<VectorHex> positions = GetRing(new() { position }, 
-                                               unit.Info.MaxAttackDistance, 
-                                               (_) => true);
+                                               unit.Info.MaxAttackDistance);
 
         foreach (VectorHex pos in positions)
             if (unit.CanAttackTile(map[pos]))
@@ -94,16 +93,18 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
-    public HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter, Predicate<HexTile> filter)
+    public HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter, Predicate<HexTile> rule=null)
     {
         if (iter <= 0)
             return prevRing;
 
+        rule ??= _ => true;
+
         HashSet<VectorHex> res = new();
         foreach (var pos in prevRing)
-            res.UnionWith(pos.Neighbours.Where(p => map.Keys.Contains(p) && filter(map[p])));
+            res.UnionWith(pos.Neighbours.Where(p => map.Keys.Contains(p) && rule(map[p])));
 
-        prevRing.UnionWith(GetRing(res, iter - 1, filter));
+        prevRing.UnionWith(GetRing(res, iter - 1, rule));
 
         return prevRing;
     }

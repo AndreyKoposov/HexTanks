@@ -44,9 +44,11 @@ public class Unit : MonoBehaviour
     }
     public bool CanMoveThroughTile(HexTile tile)
     {
+        // Unit is enemy
         if (tile.HasUnit && tile.Unit.Team != team)
             return false;
 
+        // Tile is obstacle and unit cant fly
         if (!info.Flying && tile.IsObstacle)
             return false;
         
@@ -54,9 +56,23 @@ public class Unit : MonoBehaviour
     }
     public bool CanAttackTile(HexTile tile)
     {
-        if (!tile.HasUnit || tile.Unit.Team == team || attackedUnits.Contains(tile.Position) || (tile.ProtectedBy != VectorHex.UNSIGNED && tile.ProtectedBy != Game.Grid[position].ProtectedBy))
+        // Unit doesnt exist
+        if (!tile.HasUnit)
             return false;
 
+        // Unit has same team
+        if (tile.Unit.Team == team)
+            return false;
+
+        // Unit already attacked
+        if (attackedUnits.Contains(tile.Position))
+            return false;
+
+        // Unit under another force field
+        if (tile.Protected && tile.ProtectedBy != Game.Grid[position].ProtectedBy)
+            return false;
+
+        // Unit too close
         if (position - tile.Position <= info.MinAttackDistance)
             return false;
 
@@ -144,6 +160,19 @@ public class Unit : MonoBehaviour
     {
         return A_Star.FindShortestPath(from, to);
     }
+    protected virtual void SetTeam(Team team)
+    {
+        this.team = team;
+
+        Material materialToSet;
+        if (team == Team.Player)
+            materialToSet = Game.Art.PlayerMat;
+        else
+            materialToSet = Game.Art.EnemyMat;
+
+        foreach (var part in colorParts)
+            part.material = materialToSet;
+    }
     #endregion
 
     #region Operations
@@ -157,19 +186,6 @@ public class Unit : MonoBehaviour
     {
         transform.position = to.gameObject.transform.position;
         transform.position += Vector3.up * info.OffsetOverTile;
-    }
-    protected virtual void SetTeam(Team team)
-    {
-        this.team = team;
-
-        Material materialToSet;
-        if (team == Team.Player)
-            materialToSet = Game.Art.PlayerMat;
-        else
-            materialToSet = Game.Art.EnemyMat;
-
-        foreach (var part in colorParts)
-            part.material = materialToSet;
     }
     protected IEnumerator MoveByPath(List<VectorHex> path)
     {

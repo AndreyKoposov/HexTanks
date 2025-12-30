@@ -38,6 +38,10 @@ public class HexTile : MonoBehaviour
     {
         get => obstacle != null && obstacle is Building;
     }
+    public bool Protected
+    {
+        get => protectedBy != VectorHex.UNSIGNED;
+    }
 
     public void Setup(VectorHex position)
     {

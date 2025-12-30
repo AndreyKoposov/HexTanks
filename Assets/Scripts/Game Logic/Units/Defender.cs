@@ -1,7 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Linq;
 using UnityEngine;
 
 public class Defender : Unit
@@ -17,11 +16,9 @@ public class Defender : Unit
     {
         get
         {
-            foreach (var pos in Game.Grid.GetRing(new() { position }, 2, (_) => true))
-            {
-                if (Game.Grid[pos].ProtectedBy != VectorHex.UNSIGNED)
+            foreach (var pos in Game.Grid.GetRing(new() { position }, 2))
+                if (Game.Grid[pos].Protected)
                     return true;
-            }
 
             return false;
         }
@@ -37,6 +34,7 @@ public class Defender : Unit
             UnsetProtections();
     }
 
+    #region Overrides
     protected override IEnumerator AnimateMove(List<VectorHex> path)
     {
         SetField(false);
@@ -56,10 +54,12 @@ public class Defender : Unit
         else
             sphere.GetComponentInChildren<MeshRenderer>().material = Game.Art.EnemySphere;
     }
+    #endregion
 
+    #region Operations
     private void SetProtections()
     {
-        var ring = Game.Grid.GetRing(new() { position }, 2, (_) => true);
+        var ring = Game.Grid.GetRing(new() { position }, 2);
         protectedArea.UnionWith(ring);
 
         foreach (var pos in ring)
@@ -72,4 +72,5 @@ public class Defender : Unit
 
         protectedArea.Clear();
     }
+    #endregion
 }

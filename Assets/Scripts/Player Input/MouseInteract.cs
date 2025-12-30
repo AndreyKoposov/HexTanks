@@ -32,25 +32,28 @@ public class MouseInteract : MonoBehaviour
         CheckHover();
         CheckClick();
 
-        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha1))
-            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Infantry, Team.Player);
-        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha2))
-            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Heavy, Team.Player);
-        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha3))
-            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Scout, Team.Player);
-        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha4))
-            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Artillery, Team.Player);
-        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha5))
-            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Defender, Team.Player);
+        Team team = Game.CurrentPlayer;
 
-        if (HoverExist && Input.GetKeyDown(KeyCode.F) && Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender)
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha1))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Infantry, team);
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha2))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Heavy, team);
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha3))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Scout, team);
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha4))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Artillery, team);
+        if (HoverExist && Input.GetKeyDown(KeyCode.Alpha5))
+            Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Defender, team);
+
+        if (HoverExist && Input.GetKeyDown(KeyCode.F) &&
+            Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender &&
+            (Game.Grid[hoveredTile].Unit as Defender).CanActivateField)
         {
             (Game.Grid[hoveredTile].Unit as Defender).SetField(true);
         }
+
         if (HoverExist && Input.GetKeyDown(KeyCode.G) && Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender)
-        {
             (Game.Grid[hoveredTile].Unit as Defender).SetField(false);
-        }
 
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             GlobalEventManager.UnitDied.Invoke(hoveredTile);

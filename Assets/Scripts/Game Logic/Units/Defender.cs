@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using UnityEngine;
 
 public class Defender : Unit
@@ -7,23 +10,66 @@ public class Defender : Unit
     [SerializeField] private GameObject sphere;
     [SerializeField] private Animator animator;
 
+    private HashSet<VectorHex> protectedArea = new();
+
+    public bool CanActivateField => movePoints == info.MovementDistance && !TooCloseToOtherField;
+    private bool TooCloseToOtherField
+    {
+        get
+        {
+            foreach (var pos in Game.Grid.GetRing(new() { position }, 2, (_) => true))
+            {
+                if (Game.Grid[pos].ProtectedBy != VectorHex.UNSIGNED)
+                    return true;
+            }
+
+            return false;
+        }
+    }
+
     public void SetField(bool active)
     {
         animator.SetBool("FieldActive", active);
+
+        if (active)
+            SetProtections();
+        else
+            UnsetProtections();
     }
 
-    private IEnumerator AnimateField()
+    protected override IEnumerator AnimateMove(List<VectorHex> path)
     {
-        sphere.SetActive(true);
-        yield return ExpandField(5);
+        SetField(false);
+        yield return base.AnimateMove(path);
+    }
+    protected override IEnumerator AnimateDamage()
+    {
+        SetField(false);
+        yield return base.AnimateDamage();
+    }
+    protected override void SetTeam(Team team)
+    {
+        base.SetTeam(team);
+
+        if (team == Team.Player)
+            sphere.GetComponentInChildren<MeshRenderer>().material = Game.Art.PlayerSphere;
+        else
+            sphere.GetComponentInChildren<MeshRenderer>().material = Game.Art.EnemySphere;
     }
 
-    protected IEnumerator ExpandField(float targetScale)
+    private void SetProtections()
     {
-        for (int i = 0; i < Frames; i++)
-        {
-            sphere.transform.localScale += targetScale / Frames * Vector3.one;
-            yield return new WaitForSeconds(1f / Frames);
-        }
+        var ring = Game.Grid.GetRing(new() { position }, 2, (_) => true);
+        protectedArea.UnionWith(ring);
+
+        foreach (var pos in ring)
+            Game.Grid[pos].SetProtection(this);
+    }
+    private void UnsetProtections()
+    {
+        foreach (var pos in protectedArea)
+            Game.Grid[pos].UnsetProtection();
+
+        protectedArea.Clear();
     }
 }

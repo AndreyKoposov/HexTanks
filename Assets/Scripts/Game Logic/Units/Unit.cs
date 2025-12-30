@@ -54,7 +54,7 @@ public class Unit : MonoBehaviour
     }
     public bool CanAttackTile(HexTile tile)
     {
-        if (!tile.HasUnit || tile.Unit.Team == team || attackedUnits.Contains(tile.Position))
+        if (!tile.HasUnit || tile.Unit.Team == team || attackedUnits.Contains(tile.Position) || (tile.ProtectedBy != VectorHex.UNSIGNED && tile.ProtectedBy != Game.Grid[position].ProtectedBy))
             return false;
 
         if (position - tile.Position <= info.MinAttackDistance)
@@ -158,7 +158,7 @@ public class Unit : MonoBehaviour
         transform.position = to.gameObject.transform.position;
         transform.position += Vector3.up * info.OffsetOverTile;
     }
-    protected void SetTeam(Team team)
+    protected virtual void SetTeam(Team team)
     {
         this.team = team;
 

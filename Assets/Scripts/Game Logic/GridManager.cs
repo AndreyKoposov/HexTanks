@@ -94,7 +94,7 @@ public class GridManager : MonoBehaviour
         return result;
     }
 
-    private HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter, Predicate<HexTile> filter)
+    public HashSet<VectorHex> GetRing(HashSet<VectorHex> prevRing, int iter, Predicate<HexTile> filter)
     {
         if (iter <= 0)
             return prevRing;

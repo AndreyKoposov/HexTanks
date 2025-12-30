@@ -8,6 +8,7 @@ public class HexTile : MonoBehaviour
     private VectorHex position;
     private Unit unit;
     private Obstacle obstacle;
+    private VectorHex protectedBy = VectorHex.UNSIGNED;
 
     public Obstacle Obstacle
     {
@@ -24,10 +25,11 @@ public class HexTile : MonoBehaviour
     {
         get => obstacle as Building;
     }
-
-    public bool IsObstacle => isWater || obstacle != null;
     public VectorHex Position => position;
     public Unit Unit => unit;
+    public VectorHex ProtectedBy => protectedBy;
+
+    public bool IsObstacle => isWater || obstacle != null;
     public bool HasUnit
     {
         get { return unit != null; }
@@ -56,6 +58,14 @@ public class HexTile : MonoBehaviour
         unit = null;
 
         return unsetted;
+    }
+    public void SetProtection(Unit unit)
+    {
+        protectedBy = unit.Position;
+    }
+    public void UnsetProtection()
+    {
+        protectedBy = VectorHex.UNSIGNED;
     }
     public void SetLayer(string layerName)
     {

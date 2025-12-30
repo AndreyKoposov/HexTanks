@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UIElements;
 
 public class GridManager : MonoBehaviour
 {
@@ -41,7 +40,11 @@ public class GridManager : MonoBehaviour
         if (from == to) return;
 
         Unit unit = map[from].UnsetUnit();
-        map[to].SetUnit(unit);
+
+        if (map[to].Unit is Transport)
+            (map[to].Unit as Transport).SetUnit(unit);
+        else
+            map[to].SetUnit(unit);
     }
     public void AttackUnitAt(VectorHex attacking, VectorHex attacked)
     {
@@ -66,7 +69,7 @@ public class GridManager : MonoBehaviour
                                                unit.CanMoveThroughTile);
 
         foreach (VectorHex pos in positions)
-            if (!map[pos].HasUnit)
+            if (!map[pos].HasUnit || (map[pos].Unit is Transport && map[pos].Unit.Team == unit.Team))
                 result.Add(pos);
 
         return result;

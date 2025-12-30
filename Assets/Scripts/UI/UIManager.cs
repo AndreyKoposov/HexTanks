@@ -7,6 +7,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TurnPanel turnPanel;
     [SerializeField] private BuildingPanel buildingPanel;
     [SerializeField] private Button defenderButton;
+    [SerializeField] private TransportPanel transportPanel;
 
     public void OpenBuildingPanel(Building building)
     {
@@ -29,5 +30,13 @@ public class UIManager : MonoBehaviour
         defenderButton.gameObject.SetActive(false);
 
         defenderButton.onClick.RemoveAllListeners();
+    }
+    public void OpenTrasportPanel(Transport transport)
+    {
+        transportPanel.Open(transport);
+    }
+    public void CloseTransportPanel()
+    {
+        transportPanel.Close();
     }
 }

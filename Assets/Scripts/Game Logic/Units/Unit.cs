@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -105,6 +106,47 @@ public class Unit : MonoBehaviour
             postAction
         ));
     }
+    public void BoardTo(Transport to)
+    {
+        var path = FindPath(position, to.Position);
+
+        void preAction()
+        {
+            movePoints = 0;
+            position = VectorHex.UNSIGNED;
+        }
+        void postAction()
+        {
+            gameObject.SetActive(false);
+        }
+
+        StartCoroutine(Wrapper(
+            preAction,
+            () => AnimateBoard(path, to),
+            postAction
+        ));
+    }
+    public void UnboardFrom(Transport from, VectorHex on)
+    {
+        List<VectorHex> path = new() { on };
+
+        void preAction()
+        {
+            movePoints -= 1;
+            position = on;
+            gameObject.SetActive(true);
+        }
+        void postAction()
+        {
+            
+        }
+
+        StartCoroutine(Wrapper(
+            preAction,
+            () => AnimateBoard(path, from),
+            postAction
+        ));
+    }
     public void AttackUnit(Unit attacked)
     {
         void preAction()
@@ -147,6 +189,12 @@ public class Unit : MonoBehaviour
     protected virtual IEnumerator AnimateMove(List<VectorHex> path)
     {
         yield return MoveByPath(path);
+    }
+    protected IEnumerator AnimateBoard(List<VectorHex> path, Transport unit)
+    {
+        yield return unit.AnimateVerticalMove(-1);
+        yield return AnimateMove(path);
+        yield return unit.AnimateVerticalMove(1);
     }
     protected virtual IEnumerator AnimateAttack(Unit attacked)
     {
@@ -217,6 +265,15 @@ public class Unit : MonoBehaviour
         for (int i = 0; i < Frames; i++)
         {
             transform.Translate(delta / Frames * Vector3.forward, Space.Self);
+            yield return new WaitForSeconds(info.MoveSpeed / Frames);
+        }
+    }
+    public IEnumerator AnimateVerticalMove(int direction)
+    {
+        float delta = Math.Abs(info.OffsetOverTile - 0.1f);
+        for (int i = 0; i < Frames; i++)
+        {
+            transform.Translate(direction * delta / Frames * Vector3.up, Space.Self);
             yield return new WaitForSeconds(info.MoveSpeed / Frames);
         }
     }

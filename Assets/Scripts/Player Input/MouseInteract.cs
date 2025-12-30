@@ -13,6 +13,7 @@ public class MouseInteract : MonoBehaviour
     private readonly List<VectorHex> validAttacks = new();
     private bool selectBuilding = false;
     private bool selectDefender = false;
+    private bool selectTransport = false;
 
     private bool HoverExist
     {
@@ -111,6 +112,12 @@ public class MouseInteract : MonoBehaviour
         {
             selectDefender = true;
             Game.UI.ShowDefenderButton(Game.Grid[selectedTile].Unit as Defender);
+        }
+        else
+        if (Game.Grid[selectedTile].Unit.Info.Type == UnitType.Transport)
+        {
+            selectTransport = true;
+            Game.UI.OpenTrasportPanel(Game.Grid[selectedTile].Unit as Transport);
         }
     }
     private void BuildingSelectCommand()
@@ -215,6 +222,14 @@ public class MouseInteract : MonoBehaviour
 
         selectDefender = false;
     }
+    private void DeselectTransport()
+    {
+        if (!selectTransport) return;
+
+        Game.UI.CloseTransportPanel();
+
+        selectTransport = false;
+    }
     private void SelectAllUnitTiles()
     {
         SelectTile();
@@ -226,7 +241,9 @@ public class MouseInteract : MonoBehaviour
         DeselectTile();
         DeselectValidMoves();
         DeselectValidAttacks();
+
         DeselectDefender();
+        DeselectTransport();
     }
     private void DeselectAll()
     {
@@ -240,6 +257,7 @@ public class MouseInteract : MonoBehaviour
     {
         GlobalEventManager.UnitDied.AddListener(DeselectOnUnitDied);
         GlobalEventManager.EndTurn.AddListener(DeselectOnTurnChanged);
+        GlobalEventManager.BoardUnitSelected.AddListener(OnBoardSelected);
     } 
     private void DeselectOnUnitDied(VectorHex unitPos)
     {
@@ -249,6 +267,19 @@ public class MouseInteract : MonoBehaviour
     private void DeselectOnTurnChanged(Team _)
     {
         DeselectAll();
+    }
+    private void OnBoardSelected(Transport transport, Unit unit)
+    {
+        DeselectTile();
+        DeselectValidMoves();
+        DeselectValidAttacks();
+        DeselectDefender();
+        DeselectBuilding();
+
+        selectedTile = transport.Position;
+        Game.Grid[selectedTile].ApplySelect(SelectType.Default);
+        SelectValidMoves();
+        SelectValidAttacks();
     }
     #endregion
 }

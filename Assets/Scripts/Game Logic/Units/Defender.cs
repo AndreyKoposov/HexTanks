@@ -5,23 +5,14 @@ public class Defender : Unit
 {
     [SerializeField] private GameObject tower;
     [SerializeField] private GameObject sphere;
-
-    private bool fieldActive = false;
+    [SerializeField] private Animator animator;
 
     public void SetField()
     {
-        void preAction()
-        {
-        }
-        void postAction()
-        {
-        }
+        sphere.SetActive(true);
 
-        StartCoroutine(Wrapper(
-            preAction,
-            () => AnimateField(),
-            postAction
-        ));
+        animator.SetTrigger("SetField");
+        animator.SetBool("Off", false);
     }
 
     private IEnumerator AnimateField()

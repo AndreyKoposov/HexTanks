@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 362985022730248271}
   - component: {fileID: 435528896788207177}
+  - component: {fileID: 3531046524208501137}
   m_Layer: 0
   m_Name: Defender
   m_TagString: Untagged
@@ -157,6 +158,28 @@ MonoBehaviour:
   - {fileID: 2923411916034633478}
   tower: {fileID: 3120113354808925806}
   sphere: {fileID: 3319226128815344651}
+  animator: {fileID: 3531046524208501137}
+--- !u!95 &3531046524208501137
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1698295356988774739}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: e3545deb4c3b4874c9804b4280689414, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2937840596304500842
 GameObject:
   m_ObjectHideFlags: 0

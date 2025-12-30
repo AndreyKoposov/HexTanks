@@ -12,6 +12,7 @@ public class MouseInteract : MonoBehaviour
     private readonly List<VectorHex> validMoves = new();
     private readonly List<VectorHex> validAttacks = new();
     private bool selectBuilding = false;
+    private bool selectDefender = false;
 
     private bool HoverExist
     {
@@ -105,6 +106,12 @@ public class MouseInteract : MonoBehaviour
         DeselectAll();
 
         SelectAllUnitTiles();
+
+        if (Game.Grid[selectedTile].Unit.Info.Type == UnitType.Defender)
+        {
+            selectDefender = true;
+            Game.UI.ShowDefenderButton(Game.Grid[selectedTile].Unit as Defender);
+        }
     }
     private void BuildingSelectCommand()
     {
@@ -200,6 +207,14 @@ public class MouseInteract : MonoBehaviour
 
         selectBuilding = false;
     }
+    private void DeselectDefender()
+    {
+        if (!selectDefender) return;
+
+        Game.UI.HideDefenderButton();
+
+        selectDefender = false;
+    }
     private void SelectAllUnitTiles()
     {
         SelectTile();
@@ -211,6 +226,7 @@ public class MouseInteract : MonoBehaviour
         DeselectTile();
         DeselectValidMoves();
         DeselectValidAttacks();
+        DeselectDefender();
     }
     private void DeselectAll()
     {

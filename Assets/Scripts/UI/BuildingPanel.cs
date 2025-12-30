@@ -16,6 +16,8 @@ public class BuildingPanel : MonoBehaviour
     public void Close()
     {
         gameObject.SetActive(false);
+
+        buildButton.onClick.RemoveAllListeners();
     }
 
     private void Setup(Building building)
@@ -23,7 +25,6 @@ public class BuildingPanel : MonoBehaviour
         SetTurnsLeftLabel(building.TurnsLeft);
         SetUnitLabel(building.UnitToBuild);
 
-        buildButton.onClick.RemoveAllListeners();
         buildButton.onClick.AddListener(() => building.StartBuildUnit(UnitType.Infantry));
     }
     private void SetTurnsLeftLabel(int turns)

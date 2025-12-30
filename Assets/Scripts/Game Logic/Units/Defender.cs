@@ -11,13 +11,14 @@ public class Defender : Unit
 
     private HashSet<VectorHex> protectedArea = new();
 
+    public bool FieldActive => protectedArea.Count > 0;
     public bool CanActivateField => movePoints == info.MovementDistance && !TooCloseToOtherField;
     private bool TooCloseToOtherField
     {
         get
         {
             foreach (var pos in Game.Grid.GetRing(new() { position }, 2))
-                if (Game.Grid[pos].Protected)
+                if (Game.Grid[pos].Protected && Game.Grid[pos].ProtectedBy != position)
                     return true;
 
             return false;

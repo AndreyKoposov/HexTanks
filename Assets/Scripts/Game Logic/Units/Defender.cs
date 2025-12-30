@@ -7,12 +7,9 @@ public class Defender : Unit
     [SerializeField] private GameObject sphere;
     [SerializeField] private Animator animator;
 
-    public void SetField()
+    public void SetField(bool active)
     {
-        sphere.SetActive(true);
-
-        animator.SetTrigger("SetField");
-        animator.SetBool("Off", false);
+        animator.SetBool("FieldActive", active);
     }
 
     private IEnumerator AnimateField()

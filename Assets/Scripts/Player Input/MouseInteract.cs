@@ -45,7 +45,11 @@ public class MouseInteract : MonoBehaviour
 
         if (HoverExist && Input.GetKeyDown(KeyCode.F) && Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender)
         {
-            (Game.Grid[hoveredTile].Unit as Defender).SetField();
+            (Game.Grid[hoveredTile].Unit as Defender).SetField(true);
+        }
+        if (HoverExist && Input.GetKeyDown(KeyCode.G) && Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender)
+        {
+            (Game.Grid[hoveredTile].Unit as Defender).SetField(false);
         }
 
         if (HoverExist && Input.GetKeyDown(KeyCode.X))

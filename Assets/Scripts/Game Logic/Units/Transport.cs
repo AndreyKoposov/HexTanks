@@ -1,16 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 public class Transport : Unit
 {
     private static readonly int MaxCapacity = 3;
 
-    private readonly List<Unit> units = new();
+    private readonly Unit[] units = new Unit[MaxCapacity];
 
-    public int Count => units.Count;
-    public bool CanBoard => units.Count < MaxCapacity;
+    public int Count => units.Length;
+    public bool CanBoard => units.Any(u => u == null);
     public Unit this[int i]
     {
         get => units[i];
@@ -18,12 +20,13 @@ public class Transport : Unit
 
     public void SetUnit(Unit unit)
     {
-        units.Add(unit);
+        int index = Array.FindIndex(units, u => u == null);
+        units[index] = unit;
     }
     public Unit UnsetUnitOn(int index)
     {
         var unit = units[index];
-        units.RemoveAt(index);
+        units[index] = null;
 
         return unit;
     }
@@ -32,7 +35,7 @@ public class Transport : Unit
     {
         yield return MoveByPath(path, scaleOption);
 
-        units.ForEach(unit => unit.SetGlobalPositionTo(Game.Grid[position]));
+        Array.ForEach(units, unit => unit.SetGlobalPositionTo(Game.Grid[position]));
     }
     protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {

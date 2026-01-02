@@ -16,8 +16,13 @@ public class TransportPanel : MonoBehaviour
             var unit = transport[i];
             var unitIndex = i;
 
-            buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{unit.Info.Type}";
-            buttons[i].onClick.AddListener(() => GlobalEventManager.BoardUnitSelected.Invoke(transport, unitIndex));
+            if (unit == null)
+                buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = "Empty";
+            else
+            {
+                buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{unit.Info.Type}";
+                buttons[i].onClick.AddListener(() => GlobalEventManager.BoardUnitSelected.Invoke(transport, unitIndex));
+            }
         }
     }
     public void Close()

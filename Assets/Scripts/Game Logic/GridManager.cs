@@ -96,7 +96,7 @@ public class GridManager : MonoBehaviour
                                                unit.CanMoveThroughTile);
 
         foreach (VectorHex pos in positions)
-            if (!map[pos].HasUnit || (map[pos].Unit is Transport && map[pos].Unit.Team == unit.Team))
+            if (!map[pos].HasUnit || (map[pos].Unit is Transport transport && map[pos].Unit.Team == unit.Team && transport.CanBoard))
                 result.Add(pos);
 
         return result;

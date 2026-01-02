@@ -52,16 +52,6 @@ public class MouseInteract : MonoBehaviour
         if (HoverExist && Input.GetKeyDown(KeyCode.Alpha6))
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Transport, team);
 
-        if (HoverExist && Input.GetKeyDown(KeyCode.F) &&
-            Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender &&
-            (Game.Grid[hoveredTile].Unit as Defender).CanActivateField)
-        {
-            (Game.Grid[hoveredTile].Unit as Defender).SetField(true);
-        }
-
-        if (HoverExist && Input.GetKeyDown(KeyCode.G) && Game.Grid[hoveredTile].HasUnit && Game.Grid[hoveredTile].Unit is Defender)
-            (Game.Grid[hoveredTile].Unit as Defender).SetField(false);
-
         if (HoverExist && Input.GetKeyDown(KeyCode.X))
             GlobalEventManager.UnitDied.Invoke(hoveredTile);
     }
@@ -214,7 +204,7 @@ public class MouseInteract : MonoBehaviour
     }
     private void SelectBuilding()
     {
-        Building building = Game.Grid[selectedTile].Building;
+        Factory building = Game.Grid[selectedTile].Building;
 
         Game.UI.OpenBuildingPanel(building);
 

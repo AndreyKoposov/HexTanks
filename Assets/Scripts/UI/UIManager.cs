@@ -9,7 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Button defenderButton;
     [SerializeField] private TransportPanel transportPanel;
 
-    public void OpenBuildingPanel(Building building)
+    public void OpenBuildingPanel(Factory building)
     {
         buildingPanel.Open(building);
     }

@@ -1,13 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Building : Obstacle
+public class Factory : Building
 {
-    public List<VectorHex> territory = new();
-
-    [SerializeField] private Team team;
-
-    public VectorHex position;
     private UnitType unitToBuild;
     private int turnsLeft;
 

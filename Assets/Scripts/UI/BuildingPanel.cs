@@ -11,10 +11,10 @@ public class BuildingPanel : MonoBehaviour
     [SerializeField] private Button defenderButton;
     [SerializeField] private Button transportButton;
 
-    public void Open(Building building)
+    public void Open(Factory factory)
     {
         gameObject.SetActive(true);
-        Setup(building);
+        Setup(factory);
     }
     public void Close()
     {
@@ -28,17 +28,17 @@ public class BuildingPanel : MonoBehaviour
         transportButton.onClick.RemoveAllListeners();
     }
 
-    private void Setup(Building building)
+    private void Setup(Factory factory)
     {
         //SetTurnsLeftLabel(building.TurnsLeft);
         //SetUnitLabel(building.UnitToBuild);
 
-        infantryButton.onClick.AddListener(() => BuildListener(building, UnitType.Infantry));
-        heavyButton.onClick.AddListener(() => BuildListener(building, UnitType.Heavy));
-        scoutButton.onClick.AddListener(() => BuildListener(building, UnitType.Scout));
-        artilleryButton.onClick.AddListener(() => BuildListener(building, UnitType.Artillery));
-        defenderButton.onClick.AddListener(() => BuildListener(building, UnitType.Defender));
-        transportButton.onClick.AddListener(() => BuildListener(building, UnitType.Transport));
+        infantryButton.onClick.AddListener(() => BuildListener(factory, UnitType.Infantry));
+        heavyButton.onClick.AddListener(() => BuildListener(factory, UnitType.Heavy));
+        scoutButton.onClick.AddListener(() => BuildListener(factory, UnitType.Scout));
+        artilleryButton.onClick.AddListener(() => BuildListener(factory, UnitType.Artillery));
+        defenderButton.onClick.AddListener(() => BuildListener(factory, UnitType.Defender));
+        transportButton.onClick.AddListener(() => BuildListener(factory, UnitType.Transport));
     }
     private void SetTurnsLeftLabel(int turns)
     {
@@ -49,8 +49,8 @@ public class BuildingPanel : MonoBehaviour
         
     }
 
-    private void BuildListener(Building building, UnitType type)
+    private void BuildListener(Factory factory, UnitType type)
     {
-        building.StartBuildUnit(type);
+        factory.StartBuildUnit(type);
     }
 }

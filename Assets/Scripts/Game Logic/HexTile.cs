@@ -1,7 +1,11 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class HexTile : MonoBehaviour
 {
+    public UnityEvent<Team> OnUnitSet { get; set; } = new();
+    public UnityEvent<Team> OnUnitUnset { get; set; } = new();
+
     [SerializeField] private SpriteRenderer select;
     [SerializeField] private bool isWater;
 
@@ -17,13 +21,13 @@ public class HexTile : MonoBehaviour
         {
             obstacle = value;
 
-            if (obstacle is Building building)
+            if (obstacle is Factory building)
                 building.position = position;
         }
     }
-    public Building Building
+    public Factory Building
     {
-        get => obstacle as Building;
+        get => obstacle as Factory;
     }
     public VectorHex Position => position;
     public Unit Unit => unit;
@@ -36,7 +40,7 @@ public class HexTile : MonoBehaviour
     }
     public bool HasBuilding
     {
-        get => obstacle != null && obstacle is Building;
+        get => obstacle != null && obstacle is Factory;
     }
     public bool Protected
     {
@@ -50,6 +54,8 @@ public class HexTile : MonoBehaviour
     public void SetUnit(Unit unit)
     {
         this.unit = unit;
+
+        OnUnitSet.Invoke(unit.Team);
     }
     public Unit UnsetUnit()
     {

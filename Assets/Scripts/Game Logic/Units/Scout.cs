@@ -7,9 +7,9 @@ public class Scout : Unit
     {
         yield return RotateTo(transform, Game.Grid[attacked.Position].transform.position);
     }
-    protected override IEnumerator AnimateMove(List<VectorHex> path)
+    protected override IEnumerator AnimateMove(List<VectorHex> path, int scaleOption=-1)
     {
-        yield return MoveByPath(path);
+        yield return MoveByPath(path, scaleOption);
     }
     protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {

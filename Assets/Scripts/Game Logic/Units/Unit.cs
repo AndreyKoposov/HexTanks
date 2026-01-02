@@ -120,12 +120,11 @@ public class Unit : MonoBehaviour
         }
         void postAction()
         {
-            transform.localScale = Vector3.zero;
         }
 
         StartCoroutine(Wrapper(
             preAction,
-            () => AnimateBoard(path, to),
+            () => AnimateBoard(path, to, 1),
             postAction
         ));
     }
@@ -137,7 +136,6 @@ public class Unit : MonoBehaviour
         {
             movePoints -= path.Count;
             position = on;
-            transform.localScale = scale;
         }
         void postAction()
         {
@@ -146,7 +144,7 @@ public class Unit : MonoBehaviour
 
         StartCoroutine(Wrapper(
             preAction,
-            () => AnimateBoard(path, from),
+            () => AnimateBoard(path, from, 0),
             postAction
         ));
     }
@@ -189,14 +187,14 @@ public class Unit : MonoBehaviour
     #endregion
 
     #region Virtuals
-    protected virtual IEnumerator AnimateMove(List<VectorHex> path)
+    protected virtual IEnumerator AnimateMove(List<VectorHex> path, int scaleOption=-1)
     {
-        yield return MoveByPath(path);
+        yield return MoveByPath(path, scaleOption);
     }
-    protected IEnumerator AnimateBoard(List<VectorHex> path, Transport unit)
+    protected IEnumerator AnimateBoard(List<VectorHex> path, Transport unit, int scaleOption)
     {
         yield return unit.AnimateVerticalMove(-1);
-        yield return AnimateMove(path);
+        yield return AnimateMove(path, scaleOption);
         yield return unit.AnimateVerticalMove(1);
     }
     protected virtual IEnumerator AnimateAttack(Unit attacked)
@@ -238,14 +236,23 @@ public class Unit : MonoBehaviour
         transform.position = to.gameObject.transform.position;
         transform.position += Vector3.up * info.OffsetOverTile;
     }
-    protected IEnumerator MoveByPath(List<VectorHex> path)
+    protected IEnumerator MoveByPath(List<VectorHex> path, int scaleOption=-1)
     {
+        int i = 0;
+        int step = scaleOption == 0 ? 0 : path.Count - 1;
+
         foreach (VectorHex p in path)
         {
             Vector3 tilePos = Game.Grid[p].transform.position;
 
             yield return RotateTo(transform, tilePos);
+
+            if (scaleOption != - 1 && i == step)
+                StartCoroutine(AnimateSwitchScale());
+
             yield return MoveByLineTo(tilePos);
+
+            i++;
         }
     }
     protected IEnumerator RotateTo(Transform part, Vector3 point)
@@ -265,6 +272,7 @@ public class Unit : MonoBehaviour
     protected IEnumerator MoveByLineTo(Vector3 point)
     {
         float delta = (transform.position - point).magnitude;
+
         for (int i = 0; i < Frames; i++)
         {
             transform.Translate(delta / Frames * Vector3.forward, Space.Self);
@@ -279,6 +287,19 @@ public class Unit : MonoBehaviour
             transform.Translate(direction * delta / Frames * Vector3.up, Space.Self);
             yield return new WaitForSeconds(info.MoveSpeed / Frames);
         }
+    }
+    protected IEnumerator AnimateSwitchScale()
+    {
+        float targetScale = transform.localScale.x < scale.x ? scale.x : 0f;
+        float delta = targetScale - transform.localScale.x;
+
+        for (int i = 0; i < Frames; i++)
+        {
+            transform.localScale += delta / Frames * Vector3.one;
+            yield return new WaitForSeconds(info.MoveSpeed / Frames);
+        }
+
+        transform.localScale = targetScale * Vector3.one;
     }
     #endregion
 

@@ -36,10 +36,10 @@ public class Defender : Unit
     }
 
     #region Overrides
-    protected override IEnumerator AnimateMove(List<VectorHex> path)
+    protected override IEnumerator AnimateMove(List<VectorHex> path, int scaleOption=-1)
     {
         SetField(false);
-        yield return base.AnimateMove(path);
+        yield return base.AnimateMove(path, scaleOption);
     }
     protected override IEnumerator AnimateDamage()
     {

@@ -28,9 +28,9 @@ public class Transport : Unit
         return unit;
     }
 
-    protected override IEnumerator AnimateMove(List<VectorHex> path)
+    protected override IEnumerator AnimateMove(List<VectorHex> path, int scaleOption=-1)
     {
-        yield return MoveByPath(path);
+        yield return MoveByPath(path, scaleOption);
 
         units.ForEach(unit => unit.SetGlobalPositionTo(Game.Grid[position]));
     }

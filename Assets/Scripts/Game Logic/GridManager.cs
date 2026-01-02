@@ -80,7 +80,6 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidMoves(Transport transport, int index)
     {
-        Debug.Log($"Here {index}");
         return GetValidMovesForUnit(transport[index], transport.Position);
     }
     public List<VectorHex> GetValidMovesForUnit(Unit unit, VectorHex origin)

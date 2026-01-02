@@ -11,10 +11,10 @@ public class Transport : Unit
 
     private readonly Unit[] units = new Unit[MaxCapacity];
 
-    public bool onGorund = false;
+    public int onBoardCount = 0;
 
     public int Count => units.Length;
-    public bool CanBoard => units.Any(u => u == null) && !onGorund;
+    public bool CanBoard => units.Any(u => u == null);
     public Unit this[int i]
     {
         get => units[i];
@@ -33,13 +33,36 @@ public class Transport : Unit
         return unit;
     }
 
+    public IEnumerator MoveUp()
+    {
+        yield return AnimateVerticalMove(1);
+    }
+    public IEnumerator MoveDown()
+    {
+        yield return AnimateVerticalMove(-1);
+    }
+
+    private IEnumerator AnimateVerticalMove(int direction)
+    {
+        if (onBoardCount == 0)
+        {
+            float delta = Math.Abs(info.OffsetOverTile - 0.1f);
+
+            for (int i = 0; i < Frames; i++)
+            {
+                transform.Translate(direction * delta / Frames * Vector3.up, Space.Self);
+                yield return new WaitForSeconds(info.MoveSpeed / Frames);
+            }
+        }
+    }
+
     protected override IEnumerator AnimateMove(List<VectorHex> path, int scaleOption=-1)
     {
-        yield return MoveByPath(path, scaleOption);
-
         foreach (var unit in units)
             if (unit != null)
                 unit.SetGlobalPositionTo(Game.Grid[position]);
+
+        yield return MoveByPath(path, scaleOption);
     }
     protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {

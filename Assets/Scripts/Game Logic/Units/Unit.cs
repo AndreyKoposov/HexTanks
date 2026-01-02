@@ -193,11 +193,11 @@ public class Unit : MonoBehaviour
     }
     protected IEnumerator AnimateBoard(List<VectorHex> path, Transport transport, int scaleOption)
     {
-        transport.onGorund = true;
-        yield return transport.AnimateVerticalMove(-1);
+        yield return transport.MoveDown();
+        transport.onBoardCount++;
         yield return AnimateMove(path, scaleOption);
-        yield return transport.AnimateVerticalMove(1);
-        transport.onGorund = false;
+        transport.onBoardCount--;
+        yield return transport.MoveUp();
     }
     protected virtual IEnumerator AnimateAttack(Unit attacked)
     {
@@ -278,15 +278,6 @@ public class Unit : MonoBehaviour
         for (int i = 0; i < Frames; i++)
         {
             transform.Translate(delta / Frames * Vector3.forward, Space.Self);
-            yield return new WaitForSeconds(info.MoveSpeed / Frames);
-        }
-    }
-    public IEnumerator AnimateVerticalMove(int direction)
-    {
-        float delta = Math.Abs(info.OffsetOverTile - 0.1f);
-        for (int i = 0; i < Frames; i++)
-        {
-            transform.Translate(direction * delta / Frames * Vector3.up, Space.Self);
             yield return new WaitForSeconds(info.MoveSpeed / Frames);
         }
     }

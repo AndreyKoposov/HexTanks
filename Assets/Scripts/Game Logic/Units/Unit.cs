@@ -191,11 +191,13 @@ public class Unit : MonoBehaviour
     {
         yield return MoveByPath(path, scaleOption);
     }
-    protected IEnumerator AnimateBoard(List<VectorHex> path, Transport unit, int scaleOption)
+    protected IEnumerator AnimateBoard(List<VectorHex> path, Transport transport, int scaleOption)
     {
-        yield return unit.AnimateVerticalMove(-1);
+        transport.onGorund = true;
+        yield return transport.AnimateVerticalMove(-1);
         yield return AnimateMove(path, scaleOption);
-        yield return unit.AnimateVerticalMove(1);
+        yield return transport.AnimateVerticalMove(1);
+        transport.onGorund = false;
     }
     protected virtual IEnumerator AnimateAttack(Unit attacked)
     {

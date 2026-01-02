@@ -11,8 +11,10 @@ public class Transport : Unit
 
     private readonly Unit[] units = new Unit[MaxCapacity];
 
+    public bool onGorund = false;
+
     public int Count => units.Length;
-    public bool CanBoard => units.Any(u => u == null);
+    public bool CanBoard => units.Any(u => u == null) && !onGorund;
     public Unit this[int i]
     {
         get => units[i];
@@ -35,7 +37,9 @@ public class Transport : Unit
     {
         yield return MoveByPath(path, scaleOption);
 
-        Array.ForEach(units, unit => unit.SetGlobalPositionTo(Game.Grid[position]));
+        foreach (var unit in units)
+            if (unit != null)
+                unit.SetGlobalPositionTo(Game.Grid[position]);
     }
     protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {

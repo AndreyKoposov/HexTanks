@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public class Unit : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class Unit : MonoBehaviour
 
     protected Team team;
     protected VectorHex position;
+    protected Vector3 scale;
 
     protected int hp;
     protected int movePoints;
@@ -42,6 +44,7 @@ public class Unit : MonoBehaviour
         attackPoints = info.AttackPoints;
 
         transform.rotation = Quaternion.identity;
+        scale = transform.localScale;
     }
     public bool CanMoveThroughTile(HexTile tile)
     {
@@ -117,7 +120,7 @@ public class Unit : MonoBehaviour
         }
         void postAction()
         {
-            gameObject.SetActive(false);
+            transform.localScale = Vector3.zero;
         }
 
         StartCoroutine(Wrapper(
@@ -128,17 +131,17 @@ public class Unit : MonoBehaviour
     }
     public void UnboardFrom(Transport from, VectorHex on)
     {
-        List<VectorHex> path = new() { on };
+        List<VectorHex> path = FindPath(from.Position, on);
 
         void preAction()
         {
-            movePoints -= 1;
+            movePoints -= path.Count;
             position = on;
-            gameObject.SetActive(true);
+            transform.localScale = scale;
         }
         void postAction()
         {
-            
+            SetGlobalPositionTo(Game.Grid[on]);
         }
 
         StartCoroutine(Wrapper(
@@ -230,7 +233,7 @@ public class Unit : MonoBehaviour
         yield return animation();
         postAction();
     }
-    protected void SetGlobalPositionTo(HexTile to)
+    public void SetGlobalPositionTo(HexTile to)
     {
         transform.position = to.gameObject.transform.position;
         transform.position += Vector3.up * info.OffsetOverTile;

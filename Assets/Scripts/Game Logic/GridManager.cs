@@ -1,8 +1,11 @@
+using log4net.Util;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UIElements;
+using static UnityEngine.UI.CanvasScaler;
 
 public class GridManager : MonoBehaviour
 {
@@ -42,9 +45,26 @@ public class GridManager : MonoBehaviour
         Unit unit = map[from].UnsetUnit();
 
         if (map[to].Unit is Transport)
-            (map[to].Unit as Transport).SetUnit(unit);
+        {
+            var transport = map[to].Unit as Transport;
+
+            transport.SetUnit(unit);
+            unit.BoardTo(transport);
+        }
         else
+        {
             map[to].SetUnit(unit);
+            unit.MoveTo(map[to]);
+        }
+    }
+    public void UnboardUnitFromTo(VectorHex from, VectorHex to, int transportIndex)
+    {
+        if (from == to) return;
+        var transport = map[from].Unit as Transport;
+
+        var unit = transport.UnsetUnitOn(transportIndex);
+        map[to].SetUnit(unit);
+        unit.UnboardFrom(transport, to);
     }
     public void AttackUnitAt(VectorHex attacking, VectorHex attacked)
     {
@@ -53,19 +73,27 @@ public class GridManager : MonoBehaviour
 
         attackingUnit.AttackUnit(attackedUnit);
     }
-    public List<VectorHex> GetValidMovesForUnit(VectorHex position)
+    public List<VectorHex> GetValidMoves(VectorHex position)
+    {
+        return GetValidMovesForUnit(map[position].Unit, position);
+    }
+
+    public List<VectorHex> GetValidMoves(Transport transport, int index)
+    {
+        Debug.Log($"Here {index}");
+        return GetValidMovesForUnit(transport[index], transport.Position);
+    }
+    public List<VectorHex> GetValidMovesForUnit(Unit unit, VectorHex origin)
     {
         List<VectorHex> result = new();
-
-        Unit unit = map[position].Unit;
 
         if (Game.CurrentPlayer != unit.Team)
             return result;
         if (!unit.CanMove)
             return result;
 
-        HashSet<VectorHex> positions = GetRing(new() { position }, 
-                                               unit.MovePoints, 
+        HashSet<VectorHex> positions = GetRing(new() { origin },
+                                               unit.MovePoints,
                                                unit.CanMoveThroughTile);
 
         foreach (VectorHex pos in positions)

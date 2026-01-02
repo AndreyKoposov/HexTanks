@@ -11,12 +11,13 @@ public class TransportPanel : MonoBehaviour
     {
         gameObject.SetActive(true);
 
-        for (int i = 0; i < transport.units.Count; i++)
+        for (int i = 0; i < transport.Count; i++)
         {
-            var unit = transport.units[i];
+            var unit = transport[i];
+            var unitIndex = i;
 
             buttons[i].GetComponentInChildren<TextMeshProUGUI>().text = $"{unit.Info.Type}";
-            buttons[i].onClick.AddListener(() => GlobalEventManager.BoardUnitSelected.Invoke(transport, unit));
+            buttons[i].onClick.AddListener(() => GlobalEventManager.BoardUnitSelected.Invoke(transport, unitIndex));
         }
     }
     public void Close()

@@ -7,25 +7,32 @@ public class Transport : Unit
 {
     private static readonly int MaxCapacity = 3;
 
-    public readonly List<Unit> units = new();
+    private readonly List<Unit> units = new();
 
+    public int Count => units.Count;
     public bool CanBoard => units.Count < MaxCapacity;
+    public Unit this[int i]
+    {
+        get => units[i];
+    }
 
     public void SetUnit(Unit unit)
     {
         units.Add(unit);
-        unit.BoardTo(this);
     }
-    public void UnsetUnitOn(int index, VectorHex on)
+    public Unit UnsetUnitOn(int index)
     {
         var unit = units[index];
         units.RemoveAt(index);
-        unit.UnboardFrom(this, on);
+
+        return unit;
     }
 
     protected override IEnumerator AnimateMove(List<VectorHex> path)
     {
         yield return MoveByPath(path);
+
+        units.ForEach(unit => unit.SetGlobalPositionTo(Game.Grid[position]));
     }
     protected override List<VectorHex> FindPath(VectorHex _, VectorHex to)
     {

@@ -13,9 +13,12 @@ public class UnitFabric : MonoBehaviour
     public void CreateUnitAt(VectorHex position, UnitType type, Team team)
     {
         Unit unit = Instantiate(GetPrefab(type)).GetComponent<Unit>();
+        HexTile tile = Game.Grid[position];
 
         unit.Setup(team);
-        Game.Grid[position].SetUnit(unit, true);
+
+        Game.Grid[position].SetUnit(unit);
+        unit.SpawnAt(tile);
     }
 
     public void DestroyUnitAt(VectorHex position)

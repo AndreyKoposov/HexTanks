@@ -13,7 +13,10 @@ public class MouseInteract : MonoBehaviour
     private readonly List<VectorHex> validAttacks = new();
     private bool selectBuilding = false;
     private bool selectDefender = false;
+
     private bool selectTransport = false;
+    private int indexToUnboard = -1;
+    private Transport transport;
 
     private bool HoverExist
     {
@@ -129,9 +132,12 @@ public class MouseInteract : MonoBehaviour
     }
     private void UnitMoveCommand()
     {
-        Game.Grid.MoveUnitFromTo(selectedTile, hoveredTile);
+        if (indexToUnboard >= 0)
+            Game.Grid.UnboardUnitFromTo(transport.Position, hoveredTile, indexToUnboard);
+        else
+            Game.Grid.MoveUnitFromTo(selectedTile, hoveredTile);
 
-        DeselectAllUnitTiles();
+        DeselectAll();
     }
     private void UnitAttackCommand()
     {
@@ -168,8 +174,16 @@ public class MouseInteract : MonoBehaviour
     }
     private void SelectValidMoves()
     {
-        validMoves.AddRange(Game.Grid.GetValidMovesForUnit(selectedTile));
+        validMoves.AddRange(Game.Grid.GetValidMoves(selectedTile));
 
+        foreach (var move in validMoves)
+            Game.Grid[move].ApplySelect(SelectType.Default);
+    }
+    private void SelectValidUnboardMoves(Transport transport, int index)
+    {
+        validMoves.AddRange(Game.Grid.GetValidMoves(transport, index));
+
+        validMoves.Remove(transport.Position);
         foreach (var move in validMoves)
             Game.Grid[move].ApplySelect(SelectType.Default);
     }
@@ -229,6 +243,8 @@ public class MouseInteract : MonoBehaviour
         Game.UI.CloseTransportPanel();
 
         selectTransport = false;
+        indexToUnboard = -1;
+        transport = null;
     }
     private void SelectAllUnitTiles()
     {
@@ -241,14 +257,14 @@ public class MouseInteract : MonoBehaviour
         DeselectTile();
         DeselectValidMoves();
         DeselectValidAttacks();
-
-        DeselectDefender();
-        DeselectTransport();
     }
     private void DeselectAll()
     {
         DeselectAllUnitTiles();
+
         DeselectBuilding();
+        DeselectDefender();
+        DeselectTransport();
     }
     #endregion
 
@@ -268,18 +284,13 @@ public class MouseInteract : MonoBehaviour
     {
         DeselectAll();
     }
-    private void OnBoardSelected(Transport transport, Unit unit)
+    private void OnBoardSelected(Transport transport, int index)
     {
-        DeselectTile();
-        DeselectValidMoves();
-        DeselectValidAttacks();
-        DeselectDefender();
-        DeselectBuilding();
+        DeselectAllUnitTiles();
 
-        selectedTile = transport.Position;
-        Game.Grid[selectedTile].ApplySelect(SelectType.Default);
-        SelectValidMoves();
-        SelectValidAttacks();
+        indexToUnboard = index;
+        this.transport = transport;
+        SelectValidUnboardMoves(transport, index);
     }
     #endregion
 }

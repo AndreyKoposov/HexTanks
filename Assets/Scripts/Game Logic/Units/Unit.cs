@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.UI.CanvasScaler;
 
 public class Unit : MonoBehaviour
@@ -45,6 +47,19 @@ public class Unit : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
         scale = transform.localScale;
+    }
+    public bool CanStayOnTile(HexTile tile)
+    {
+        if (!tile.HasUnit)
+            return true;
+
+        if (tile.Unit is Transport transport &&
+            tile.Unit.Team == Team &&
+            transport.CanBoard &&
+            !info.Flying)
+            return true;
+
+        return false;
     }
     public bool CanMoveThroughTile(HexTile tile)
     {

@@ -80,7 +80,13 @@ public class GridManager : MonoBehaviour
 
     public List<VectorHex> GetValidMoves(Transport transport, int index)
     {
-        return GetValidMovesForUnit(transport[index], transport.Position);
+        Unit toUnboard = transport[index];
+        HexTile origin = map[transport.Position];
+
+        if (toUnboard.CanMoveThroughTile(origin))
+            return GetValidMovesForUnit(toUnboard, transport.Position);
+        else
+            return new();
     }
     public List<VectorHex> GetValidMovesForUnit(Unit unit, VectorHex origin)
     {
@@ -96,7 +102,7 @@ public class GridManager : MonoBehaviour
                                                unit.CanMoveThroughTile);
 
         foreach (VectorHex pos in positions)
-            if (!map[pos].HasUnit || (map[pos].Unit is Transport transport && map[pos].Unit.Team == unit.Team && transport.CanBoard))
+            if (unit.CanStayOnTile(map[pos]))
                 result.Add(pos);
 
         return result;

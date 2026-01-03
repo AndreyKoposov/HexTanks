@@ -1,23 +1,27 @@
-using Codice.Client.BaseCommands;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.PlayerSettings;
 
 public class Building : Obstacle
 {
-    public VectorHex position;
     public List<HexTile> territoryInit = new();
 
-    [SerializeField] protected Team team;
+    [SerializeField] protected BuildingInfo info;
+
+    protected VectorHex position;
     protected List<VectorHex> territory = new();
+    protected Team state;
+    protected int playerCounter = 0;
+    protected int enemyCounter = 0;
 
-    private Team state;
-    private int playerCounter = 0;
-    private int enemyCounter = 0;
-
-    public void Init()
+    private void Start()
     {
+        SetState(state);
+    }
+
+    public void Init(VectorHex pos)
+    {
+        position = pos;
+
         foreach (var tile in territoryInit)
         {
             territory.Add(tile.Position);
@@ -29,7 +33,18 @@ public class Building : Obstacle
         UpdateTiles();
     }
 
-    private void UpdateState()
+    protected void SetState(Team state)
+    {
+        if (state == Team.Player)
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
+        else
+        if (state == Team.Enemy)
+            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
+        else
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
+    }
+
+    protected virtual void UpdateState()
     {
         if (playerCounter > 0 && enemyCounter > 0)
             state = Team.Blocked;
@@ -42,9 +57,11 @@ public class Building : Obstacle
         else
         if (playerCounter == 0 && enemyCounter == 0)
             state = Team.Neutral;
+
+        SetState(state);
     }
 
-    private void UpdateTiles()
+    protected void UpdateTiles()
     {
         foreach (var pos in territory)
         {
@@ -68,7 +85,7 @@ public class Building : Obstacle
     }
 
     #region Events
-    private void UpdateStateOnUnitEnter(Team unitTeam)
+    protected void UpdateStateOnUnitEnter(Team unitTeam)
     {
         if (unitTeam == Team.Player)
             playerCounter++;
@@ -78,7 +95,7 @@ public class Building : Obstacle
         UpdateState();
         UpdateTiles();
     }
-    private void UpdateStateOnUnitExit(Team unitTeam)
+    protected void UpdateStateOnUnitExit(Team unitTeam)
     {
         if (unitTeam == Team.Player)
             playerCounter--;

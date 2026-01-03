@@ -35,9 +35,6 @@ public class GridManager : MonoBehaviour
         {
             var pos = (VectorHex)tilemap.WorldToCell(obstacle.transform.position);
             map[pos].Obstacle = obstacle;
-
-            if (obstacle is Building building)
-                building.Init();
         }
     }
 

@@ -9,14 +9,6 @@ public class Factory : Building
     public UnitType UnitToBuild => unitToBuild;
     public int TurnsLeft => turnsLeft;
 
-    private void Start()
-    {
-        if (team == Team.Player)
-            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
-        if (team == Team.Enemy)
-            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
-    }
-
     public void StartBuildUnit(UnitType type)
     {
         unitToBuild = type;
@@ -31,7 +23,7 @@ public class Factory : Building
         turnsLeft--;
 
         if (turnsLeft <= 0)
-            Game.Fabric.CreateUnitAt(position, unitToBuild, team);
+            Game.Fabric.CreateUnitAt(position, unitToBuild, state);
 
         GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
     }

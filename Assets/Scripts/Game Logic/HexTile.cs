@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static UnityEditor.PlayerSettings;
 
 public class HexTile : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class HexTile : MonoBehaviour
             obstacle = value;
 
             if (obstacle is Building building)
-                building.position = position;
+                building.Init(position);
         }
     }
     public Factory Building

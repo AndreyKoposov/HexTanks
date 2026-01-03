@@ -326,9 +326,9 @@ GameObject:
   - component: {fileID: 2085691194172435492}
   - component: {fileID: 2884821895900206963}
   - component: {fileID: 5435264403778210472}
-  - component: {fileID: 7955081764069857792}
+  - component: {fileID: 2510115013680703251}
   m_Layer: 0
-  m_Name: Building
+  m_Name: MainBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -406,7 +406,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &7955081764069857792
+--- !u!114 &2510115013680703251
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -415,11 +415,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 2121430320071985079}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c6f2919c67dac004cb768745573b96f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 6d51183f30a0182419e19c62c32ed6ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   territoryInit: []
-  team: 2
+  info: {fileID: 11400000, guid: 917d546f47af60b49b26e72b3d179371, type: 2}
+  initTeam: 0
 --- !u!1 &3375748150737138067
 GameObject:
   m_ObjectHideFlags: 0

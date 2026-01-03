@@ -22,3 +22,13 @@ public enum SelectType
     Default = 1,
     Attack = 2,
 }
+
+public enum HexDirections
+{
+    Left = 0,
+    LeftBottom = 1,
+    RightBottom = 2,
+    Right = 3,
+    RightTop = 4,
+    LeftTop = 5,
+}

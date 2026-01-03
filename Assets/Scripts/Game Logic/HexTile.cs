@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,6 +7,7 @@ public class HexTile : MonoBehaviour
     public UnityEvent<Team> OnUnitSet { get; set; } = new();
     public UnityEvent<Team> OnUnitUnset { get; set; } = new();
 
+    [SerializeField] private SpriteRenderer[] perimeter = new SpriteRenderer[6];
     [SerializeField] private SpriteRenderer select;
     [SerializeField] private bool isWater;
 
@@ -21,7 +23,7 @@ public class HexTile : MonoBehaviour
         {
             obstacle = value;
 
-            if (obstacle is Factory building)
+            if (obstacle is Building building)
                 building.position = position;
         }
     }
@@ -62,6 +64,8 @@ public class HexTile : MonoBehaviour
         var unsetted = unit;
         unit = null;
 
+        OnUnitUnset.Invoke(unsetted.Team);
+
         return unsetted;
     }
     public void SetProtection(Unit unit)
@@ -92,5 +96,23 @@ public class HexTile : MonoBehaviour
                 select.color = Game.Art.AttackColor;
                 break;
         }
+    }
+
+    public void SetTerritory(Team team, List<HexDirections> sides)
+    {
+        Color color = Game.Art.TColor;
+
+        foreach (var sprite in perimeter)
+            sprite.gameObject.SetActive(false);
+
+        if (team != Team.Neutral)
+            for (int i = 0; i < sides.Count; i++)
+            {
+                Debug.Log(sides[i]);
+                int direction = (int)sides[i];
+
+                perimeter[direction].gameObject.SetActive(true);
+                perimeter[direction].color = color;
+            }
     }
 }

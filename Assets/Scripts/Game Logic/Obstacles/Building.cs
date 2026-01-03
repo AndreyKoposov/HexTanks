@@ -41,7 +41,7 @@ public class Building : Obstacle
         if (state == Team.Enemy)
             GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
         else
-            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
+            GetComponent<MeshRenderer>().material = Game.Art.NeutralMat;
     }
 
     protected virtual void UpdateState()

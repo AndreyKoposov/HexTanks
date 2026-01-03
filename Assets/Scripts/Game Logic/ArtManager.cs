@@ -4,6 +4,7 @@ public class ArtManager : MonoBehaviour
 {
     [SerializeField] private Material playerMat;
     [SerializeField] private Material enemyMat;
+    [SerializeField] private Material neutralMat;
 
     [SerializeField] private Material playerSphere;
     [SerializeField] private Material enemySphere;
@@ -19,6 +20,7 @@ public class ArtManager : MonoBehaviour
 
     public Material PlayerMat => playerMat;
     public Material EnemyMat => enemyMat;
+    public Material NeutralMat => neutralMat;
     public Color SelectColor => selectColor;
     public Color AttackColor => attackColor;
     public Material PlayerSphere => playerSphere;

@@ -19,9 +19,11 @@ public class UnitFabric : MonoBehaviour
 
         Game.Grid[position].SetUnit(unit);
         unit.SpawnAt(tile);
+
+        GlobalEventManager.UnitCreated.Invoke(unit.Position, unit.Team);
     }
 
-    public void DestroyUnitAt(VectorHex position)
+    public void DestroyUnitAt(VectorHex position, Team _)
     {
         Unit unit = Game.Grid[position].UnsetUnit();
         Destroy(unit.gameObject);

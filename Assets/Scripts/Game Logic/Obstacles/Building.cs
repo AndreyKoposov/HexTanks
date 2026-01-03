@@ -9,13 +9,13 @@ public class Building : Obstacle
 
     protected VectorHex position;
     protected List<VectorHex> territory = new();
-    protected Team state;
+    protected Team state = Team.Neutral;
     protected int playerCounter = 0;
     protected int enemyCounter = 0;
 
     private void Start()
     {
-        SetState(state);
+        //UpdateState();
     }
 
     public void Init(VectorHex pos)
@@ -33,12 +33,12 @@ public class Building : Obstacle
         UpdateTiles();
     }
 
-    protected void SetState(Team state)
+    protected void SetMaterial(Team newState)
     {
-        if (state == Team.Player)
+        if (newState == Team.Player)
             GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
         else
-        if (state == Team.Enemy)
+        if (newState == Team.Enemy)
             GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
         else
             GetComponent<MeshRenderer>().material = Game.Art.NeutralMat;
@@ -46,19 +46,30 @@ public class Building : Obstacle
 
     protected virtual void UpdateState()
     {
+        Team newState;
+
         if (playerCounter > 0 && enemyCounter > 0)
-            state = Team.Blocked;
+            newState = Team.Blocked;
         else
         if (playerCounter > 0 && enemyCounter == 0)
-            state = Team.Player;
+            newState = Team.Player;
         else
         if (playerCounter == 0 && enemyCounter > 0)
-            state = Team.Enemy;
+            newState = Team.Enemy;
         else
-        if (playerCounter == 0 && enemyCounter == 0)
-            state = Team.Neutral;
+            newState = Team.Neutral;
 
-        SetState(state);
+        SetMaterial(newState);
+
+        if (newState != state)
+        {
+            if (state != Team.Neutral && state != Team.Blocked)
+                GlobalEventManager.PlayerLoseBuilding.Invoke(state, info);
+            if (newState != Team.Neutral && newState != Team.Blocked)
+                GlobalEventManager.PlayerGotBuilding.Invoke(newState, info);
+        }
+
+        state = newState;
     }
 
     protected void UpdateTiles()

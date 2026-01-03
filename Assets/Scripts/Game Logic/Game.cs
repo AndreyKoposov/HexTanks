@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Game : MonoBehaviour
@@ -21,6 +22,9 @@ public class Game : MonoBehaviour
 
     private int turn = 1;
     private Team team = Team.Player;
+    private Dictionary<Team, PlayerData> players = new();
+    private PlayerData player = new (Team.Player);
+    private PlayerData enemy = new(Team.Enemy);
 
     public static GridManager Grid
     {
@@ -43,6 +47,8 @@ public class Game : MonoBehaviour
     {
         get => Instance.team;
     }
+    public static PlayerData Player => Instance.player;
+    public static PlayerData Enemy => Instance.enemy;
 
     public void EndTurn()
     {

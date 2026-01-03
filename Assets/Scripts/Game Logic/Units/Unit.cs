@@ -190,7 +190,7 @@ public class Unit : MonoBehaviour
         void postAction()
         {
             if (hp <= 0)
-                GlobalEventManager.UnitDied.Invoke(position);
+                GlobalEventManager.UnitDied.Invoke(position, team);
         }
 
         StartCoroutine(Wrapper(

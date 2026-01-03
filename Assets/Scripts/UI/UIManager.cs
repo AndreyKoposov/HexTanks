@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private BuildingPanel buildingPanel;
     [SerializeField] private Button defenderButton;
     [SerializeField] private TransportPanel transportPanel;
+    [SerializeField] private PlayerPanel playerPanel;
 
     public void OpenBuildingPanel(Factory building)
     {
@@ -38,5 +39,10 @@ public class UIManager : MonoBehaviour
     public void CloseTransportPanel()
     {
         transportPanel.Close();
+    }
+
+    public void UpdatePlayerPanel(PlayerData data)
+    {
+        playerPanel.UpdateLabels(data);
     }
 }

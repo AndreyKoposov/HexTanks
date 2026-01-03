@@ -52,8 +52,8 @@ public class MouseInteract : MonoBehaviour
         if (HoverExist && Input.GetKeyDown(KeyCode.Alpha6))
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Transport, team);
 
-        if (HoverExist && Input.GetKeyDown(KeyCode.X))
-            GlobalEventManager.UnitDied.Invoke(hoveredTile);
+        //if (HoverExist && Input.GetKeyDown(KeyCode.X))
+        //    GlobalEventManager.UnitDied.Invoke(hoveredTile);
     }
 
     #region Main Logic
@@ -265,7 +265,7 @@ public class MouseInteract : MonoBehaviour
         GlobalEventManager.EndTurn.AddListener(DeselectOnTurnChanged);
         GlobalEventManager.BoardUnitSelected.AddListener(OnBoardSelected);
     } 
-    private void DeselectOnUnitDied(VectorHex unitPos)
+    private void DeselectOnUnitDied(VectorHex unitPos, Team _)
     {
         if (selectedTile == unitPos)
             DeselectAllUnitTiles();

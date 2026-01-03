@@ -8,11 +8,29 @@ public class MainBase : Factory
 
     protected override void UpdateState()
     {
-        base.UpdateState();
+        Team newState;
 
-        if (enemyCounter == 0 && playerCounter == 0)
-            state = initTeam;
+        if (playerCounter > 0 && enemyCounter > 0)
+            newState = Team.Blocked;
+        else
+        if (playerCounter > 0 && enemyCounter == 0)
+            newState = Team.Player;
+        else
+        if (playerCounter == 0 && enemyCounter > 0)
+            newState = Team.Enemy;
+        else
+            newState = initTeam;
 
-        SetState(state);
+        SetMaterial(newState);
+
+        if (newState != state)
+        {
+            if (state != Team.Neutral && state != Team.Blocked)
+                GlobalEventManager.PlayerLoseBuilding.Invoke(state, info);
+            if (newState != Team.Neutral && newState != Team.Blocked)
+                GlobalEventManager.PlayerGotBuilding.Invoke(newState, info);
+        }
+
+        state = newState;
     }
 }

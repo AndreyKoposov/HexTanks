@@ -9735,6 +9735,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMat: {fileID: 2100000, guid: b7256670e7e8fe64398e37381895eb25, type: 2}
   enemyMat: {fileID: 2100000, guid: ed378dc5821139f41b62a706cbcfed3f, type: 2}
+  neutralMat: {fileID: 2100000, guid: 82e5ef828b9f1514bbcc2e6f168caaeb, type: 2}
   playerSphere: {fileID: 2100000, guid: bd69898a35e9d074f842ae9328a9db13, type: 2}
   enemySphere: {fileID: 2100000, guid: ae817921ef02a744e8bafccbcd58e33c, type: 2}
   selectColor: {r: 1, g: 0.9796836, b: 0.41037738, a: 0.5019608}

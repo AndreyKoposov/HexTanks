@@ -9305,7 +9305,10 @@ MonoBehaviour:
   enemySphere: {fileID: 2100000, guid: ae817921ef02a744e8bafccbcd58e33c, type: 2}
   selectColor: {r: 1, g: 0.9796836, b: 0.41037738, a: 0.5019608}
   attackColor: {r: 1, g: 0.31186232, b: 0, a: 0.5019608}
-  territoryColor: {r: 0, g: 0.09685278, b: 1, a: 0}
+  playerColor: {r: 0, g: 0.10010338, b: 1, a: 1}
+  enemyColor: {r: 1, g: 0, b: 0, a: 1}
+  neutralColor: {r: 0.4198113, g: 0.4198113, b: 0.4198113, a: 1}
+  blockedColor: {r: 1, g: 0.9757196, b: 0, a: 1}
 --- !u!4 &1729706241
 Transform:
   m_ObjectHideFlags: 0

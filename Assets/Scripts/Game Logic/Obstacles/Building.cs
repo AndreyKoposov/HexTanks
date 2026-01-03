@@ -24,6 +24,9 @@ public class Building : Obstacle
             tile.OnUnitSet.AddListener(UpdateStateOnUnitEnter);
             tile.OnUnitUnset.AddListener(UpdateStateOnUnitExit);
         }
+
+        UpdateState();
+        UpdateTiles();
     }
 
     private void UpdateState()
@@ -37,6 +40,7 @@ public class Building : Obstacle
         if (playerCounter == 0 && enemyCounter > 0)
             state = Team.Enemy;
         else
+        if (playerCounter == 0 && enemyCounter == 0)
             state = Team.Neutral;
     }
 

@@ -100,19 +100,24 @@ public class HexTile : MonoBehaviour
 
     public void SetTerritory(Team team, List<HexDirections> sides)
     {
-        Color color = Game.Art.TColor;
+        var color = team switch
+        {
+            Team.Player => Game.Art.PlayerColor,
+            Team.Enemy => Game.Art.EnemyColor,
+            Team.Neutral => Game.Art.NeutralColor,
+            Team.Blocked => Game.Art.BlockedColor,
+            _ => Game.Art.NeutralColor,
+        };
 
         foreach (var sprite in perimeter)
             sprite.gameObject.SetActive(false);
 
-        if (team != Team.Neutral)
-            for (int i = 0; i < sides.Count; i++)
-            {
-                Debug.Log(sides[i]);
-                int direction = (int)sides[i];
+        for (int i = 0; i < sides.Count; i++)
+        {
+            int direction = (int)sides[i];
 
-                perimeter[direction].gameObject.SetActive(true);
-                perimeter[direction].color = color;
-            }
+            perimeter[direction].gameObject.SetActive(true);
+            perimeter[direction].color = color;
+        }
     }
 }

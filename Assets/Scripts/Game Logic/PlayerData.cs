@@ -20,6 +20,17 @@ public class PlayerData
         RegisterOnEvents();
     }
 
+    public bool CanBuildUnit(UnitType type)
+    {
+        var targetInfo = Game.Fabric.GetInfoByType(type);
+
+        if (targetInfo.Plasm > plasm) return false;
+        if (targetInfo.Titan > titan) return false;
+        if (targetInfo.Chips > chips) return false;
+
+        return true;
+    }
+
     #region Events
     private void RegisterOnEvents()
     {

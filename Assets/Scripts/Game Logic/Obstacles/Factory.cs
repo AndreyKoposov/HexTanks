@@ -12,7 +12,7 @@ public class Factory : Building
     public void StartBuildUnit(UnitType type)
     {
         unitToBuild = type;
-        turnsLeft = 1;
+        turnsLeft = 2;
 
         GlobalEventManager.TurnChanged.AddListener(ProgressBuildOnTurnChanged);
     }
@@ -20,12 +20,25 @@ public class Factory : Building
     #region Events
     private void ProgressBuildOnTurnChanged(int _)
     {
+        if (state == Team.Player && Game.Player.unitsHas >= Game.Player.unitsMax)
+        {
+            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            return;
+        }
+        if (state == Team.Enemy && Game.Enemy.unitsHas >= Game.Enemy.unitsMax)
+        {
+            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            return;
+        }
+
         turnsLeft--;
 
         if (turnsLeft <= 0)
+        {
             Game.Fabric.CreateUnitAt(position, unitToBuild, state);
 
-        GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+        }
     }
     #endregion
 }

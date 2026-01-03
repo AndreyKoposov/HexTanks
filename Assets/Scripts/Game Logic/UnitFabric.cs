@@ -29,6 +29,11 @@ public class UnitFabric : MonoBehaviour
         Destroy(unit.gameObject);
     }
 
+    public UnitInfo GetInfoByType(UnitType type)
+    {
+        return GetPrefab(type).GetComponent<Unit>().info;
+    }
+
     private GameObject GetPrefab(UnitType type)
     {
         return prefabs.Find(p => p.GetComponent<Unit>().Info.Type == type);

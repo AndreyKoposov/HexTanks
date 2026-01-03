@@ -13,9 +13,11 @@ public class Building : Obstacle
     protected int playerCounter = 0;
     protected int enemyCounter = 0;
 
-    private void Start()
+    public Team Team => state;
+
+    private void Awake()
     {
-        //UpdateState();
+        RegisterOnEvents();
     }
 
     public void Init(VectorHex pos)
@@ -96,6 +98,20 @@ public class Building : Obstacle
     }
 
     #region Events
+    private void RegisterOnEvents()
+    {
+        GlobalEventManager.TurnChanged.AddListener(ProduceOnTurnChanged);
+    }
+    private void ProduceOnTurnChanged(int _)
+    {
+        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
+
+        player.plasm += info.ProducePlasm;
+        player.titan += info.ProduceTitan;
+        player.chips += info.ProduceChips;
+
+        Game.UI.UpdatePlayerPanel(player);
+    }
     protected void UpdateStateOnUnitEnter(Team unitTeam)
     {
         if (unitTeam == Team.Player)

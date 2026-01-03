@@ -23,3 +23,6 @@ MonoBehaviour:
   offsetOverTile: 0.1
   rotationSpeed: 0.2
   moveSpeed: 0.3
+  plasm: 8
+  titan: 2
+  chips: 2

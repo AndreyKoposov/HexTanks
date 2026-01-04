@@ -14,20 +14,31 @@ public class Factory : Building
         unitToBuild = type;
         turnsLeft = 2;
 
+        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
+        var targetInfo = Game.Fabric.GetInfoByType(type);
+
+        player.plasm -= targetInfo.Plasm;
+        player.titan -= targetInfo.Titan;
+        player.chips -= targetInfo.Chips;
+        Game.UI.UpdatePlayerPanel(player);
+
         GlobalEventManager.TurnChanged.AddListener(ProgressBuildOnTurnChanged);
     }
 
     #region Events
     private void ProgressBuildOnTurnChanged(int _)
     {
-        if (state == Team.Player && Game.Player.unitsHas >= Game.Player.unitsMax)
+        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
+        if (player.unitsHas >= player.unitsMax)
         {
             GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
-            return;
-        }
-        if (state == Team.Enemy && Game.Enemy.unitsHas >= Game.Enemy.unitsMax)
-        {
-            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            var targetInfo = Game.Fabric.GetInfoByType(unitToBuild);
+
+            player.plasm += targetInfo.Plasm;
+            player.titan += targetInfo.Titan;
+            player.chips += targetInfo.Chips;
+            Game.UI.UpdatePlayerPanel(player);
+
             return;
         }
 

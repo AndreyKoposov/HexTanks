@@ -14,14 +14,7 @@ public class Factory : Building
         unitToBuild = type;
         turnsLeft = 2;
 
-        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
-        var targetInfo = Game.Fabric.GetInfoByType(type);
-
-        player.plasm -= targetInfo.Plasm;
-        player.titan -= targetInfo.Titan;
-        player.chips -= targetInfo.Chips;
-        Game.UI.UpdatePlayerPanel(player);
-
+        Game.GetPlayer(state).SubstactResourcesForUnit(unitToBuild);
         GlobalEventManager.EndTurn.AddListener(ProgressBuildOnTurnChanged);
     }
 
@@ -30,16 +23,11 @@ public class Factory : Building
     {
         if (state == nextPlayer) return;
 
-        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
-        if (player.unitsHas >= player.unitsMax)
+        PlayerData player = Game.GetPlayer(state);
+        if (player.LimitReached)
         {
+            Game.GetPlayer(state).AddResourcesForUnit(unitToBuild);
             GlobalEventManager.EndTurn.RemoveListener(ProgressBuildOnTurnChanged);
-            var targetInfo = Game.Fabric.GetInfoByType(unitToBuild);
-
-            player.plasm += targetInfo.Plasm;
-            player.titan += targetInfo.Titan;
-            player.chips += targetInfo.Chips;
-            Game.UI.UpdatePlayerPanel(player);
 
             return;
         }

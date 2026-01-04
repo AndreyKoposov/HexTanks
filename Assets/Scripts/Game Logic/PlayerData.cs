@@ -13,6 +13,8 @@ public class PlayerData
     public int titanProd;
     public int chipsProd;
 
+    public bool LimitReached => unitsHas >= unitsMax;
+
     public PlayerData(Team team)
     {
         this.team = team;
@@ -31,37 +33,58 @@ public class PlayerData
         return true;
     }
 
+    public void AddBuilding(BuildingInfo info)
+    {
+        unitsMax += info.UnitsContain;
+        plasmProd += info.ProducePlasm;
+        titanProd += info.ProduceTitan;
+        chipsProd += info.ProduceChips;
+
+        Game.UI.UpdatePlayerPanel(this);
+    }
+    public void RemoveBuilding(BuildingInfo info)
+    {
+        unitsMax -= info.UnitsContain;
+        plasmProd -= info.ProducePlasm;
+        titanProd -= info.ProduceTitan;
+        chipsProd -= info.ProduceChips;
+
+        Game.UI.UpdatePlayerPanel(this);
+    }
+    public void AddResourcesForBuilding(BuildingInfo info)
+    {
+        plasm += info.ProducePlasm;
+        titan += info.ProduceTitan;
+        chips += info.ProduceChips;
+
+        Game.UI.UpdatePlayerPanel(this);
+    }
+    public void AddResourcesForUnit(UnitType type)
+    {
+        var targetInfo = Game.Fabric.GetInfoByType(type);
+
+        plasm += targetInfo.Plasm;
+        titan += targetInfo.Titan;
+        chips += targetInfo.Chips;
+
+        Game.UI.UpdatePlayerPanel(this);
+    }
+    public void SubstactResourcesForUnit(UnitType type)
+    {
+        var targetInfo = Game.Fabric.GetInfoByType(type);
+
+        plasm -= targetInfo.Plasm;
+        titan -= targetInfo.Titan;
+        chips -= targetInfo.Chips;
+
+        Game.UI.UpdatePlayerPanel(this);
+    }
+
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.PlayerGotBuilding.AddListener(OnBuildingGot);
-        GlobalEventManager.PlayerLoseBuilding.AddListener(OnBuildingLose);
         GlobalEventManager.UnitDied.AddListener(OnUnitDied);
         GlobalEventManager.UnitCreated.AddListener(OnUnitCreated);
-    }
-    private void OnBuildingGot(Team team, BuildingInfo info)
-    {
-        if (team == this.team)
-        {
-            unitsMax += info.UnitsContain;
-            plasmProd += info.ProducePlasm;
-            titanProd += info.ProduceTitan;
-            chipsProd += info.ProduceChips;
-
-            Game.UI.UpdatePlayerPanel(this);
-        }
-    }
-    private void OnBuildingLose(Team team, BuildingInfo info)
-    {
-        if (team == this.team)
-        {
-            unitsMax -= info.UnitsContain;
-            plasmProd -= info.ProducePlasm;
-            titanProd -= info.ProduceTitan;
-            chipsProd -= info.ProduceChips;
-
-            Game.UI.UpdatePlayerPanel(this);
-        }
     }
     private void OnUnitCreated(VectorHex _, Team team)
     {

@@ -14,6 +14,7 @@ public class Building : Obstacle
     protected int enemyCounter = 0;
 
     public Team Team => state;
+    protected virtual Team Default => Team.Neutral;
 
     private void Awake()
     {
@@ -31,22 +32,10 @@ public class Building : Obstacle
             tile.OnUnitUnset.AddListener(UpdateStateOnUnitExit);
         }
 
-        UpdateState();
-        UpdateTiles();
+        UpdateAll();
     }
 
-    protected void SetMaterial(Team newState)
-    {
-        if (newState == Team.Player)
-            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
-        else
-        if (newState == Team.Enemy)
-            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
-        else
-            GetComponent<MeshRenderer>().material = Game.Art.NeutralMat;
-    }
-
-    protected virtual void UpdateState()
+    protected void UpdateState()
     {
         Team newState;
 
@@ -59,21 +48,18 @@ public class Building : Obstacle
         if (playerCounter == 0 && enemyCounter > 0)
             newState = Team.Enemy;
         else
-            newState = Team.Neutral;
-
-        SetMaterial(newState);
+            newState = Default;
 
         if (newState != state)
         {
             if (state != Team.Neutral && state != Team.Blocked)
-                GlobalEventManager.PlayerLoseBuilding.Invoke(state, info);
+                Game.GetPlayer(state).RemoveBuilding(info);
             if (newState != Team.Neutral && newState != Team.Blocked)
-                GlobalEventManager.PlayerGotBuilding.Invoke(newState, info);
+                Game.GetPlayer(newState).AddBuilding(info);
         }
 
         state = newState;
     }
-
     protected void UpdateTiles()
     {
         foreach (var pos in territory)
@@ -96,21 +82,32 @@ public class Building : Obstacle
             Game.Grid[pos].SetTerritory(state, dirs);
         }
     }
+    protected void UpdateMaterial()
+    {
+        if (state == Team.Player)
+            GetComponent<MeshRenderer>().material = Game.Art.PlayerMat;
+        else
+        if (state == Team.Enemy)
+            GetComponent<MeshRenderer>().material = Game.Art.EnemyMat;
+        else
+            GetComponent<MeshRenderer>().material = Game.Art.NeutralMat;
+    }
+    private void UpdateAll()
+    {
+        UpdateState();
+        UpdateTiles();
+        UpdateMaterial();
+    }
 
     #region Events
     private void RegisterOnEvents()
     {
-        GlobalEventManager.TurnChanged.AddListener(ProduceOnTurnChanged);
+        GlobalEventManager.EndTurn.AddListener(ProduceOnEndTurn);
     }
-    private void ProduceOnTurnChanged(int _)
+    private void ProduceOnEndTurn(Team nextPlayer)
     {
-        PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
-
-        player.plasm += info.ProducePlasm;
-        player.titan += info.ProduceTitan;
-        player.chips += info.ProduceChips;
-
-        Game.UI.UpdatePlayerPanel(player);
+        if (state == nextPlayer)
+            Game.GetPlayer(state).AddResourcesForBuilding(info);
     }
     protected void UpdateStateOnUnitEnter(Team unitTeam)
     {
@@ -119,8 +116,7 @@ public class Building : Obstacle
         if (unitTeam == Team.Enemy)
             enemyCounter++;
 
-        UpdateState();
-        UpdateTiles();
+        UpdateAll();
     }
     protected void UpdateStateOnUnitExit(Team unitTeam)
     {
@@ -129,8 +125,7 @@ public class Building : Obstacle
         if (unitTeam == Team.Enemy)
             enemyCounter--;
 
-        UpdateState();
-        UpdateTiles();
+        UpdateAll();
     }
     #endregion
 }

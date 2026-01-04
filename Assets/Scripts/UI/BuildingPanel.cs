@@ -27,21 +27,20 @@ public class BuildingPanel : MonoBehaviour
         defenderButton.onClick.RemoveAllListeners();
         transportButton.onClick.RemoveAllListeners();
 
-        infantryButton.interactable = true;
-        heavyButton.interactable = true;
-        scoutButton.interactable = true;
-        artilleryButton.interactable = true;
-        defenderButton.interactable = true;
-        transportButton.interactable = true;
+        SetInteractive(true);
     }
 
     private void Setup(Factory factory)
     {
         //SetTurnsLeftLabel(building.TurnsLeft);
         //SetUnitLabel(building.UnitToBuild);
-        PlayerData player = factory.Team == Team.Player ? Game.Player : Game.Enemy;
+        PlayerData player = Game.GetPlayer(factory.Team);
 
-        if (player.unitsHas < player.unitsMax)
+        if (player.LimitReached)
+        {
+            SetInteractive(false);
+        }
+        else
         {
             infantryButton.onClick.AddListener(() => BuildListener(factory, UnitType.Infantry));
             heavyButton.onClick.AddListener(() => BuildListener(factory, UnitType.Heavy));
@@ -49,15 +48,6 @@ public class BuildingPanel : MonoBehaviour
             artilleryButton.onClick.AddListener(() => BuildListener(factory, UnitType.Artillery));
             defenderButton.onClick.AddListener(() => BuildListener(factory, UnitType.Defender));
             transportButton.onClick.AddListener(() => BuildListener(factory, UnitType.Transport));
-        }
-        else
-        {
-            infantryButton.interactable = false;
-            heavyButton.interactable = false;
-            scoutButton.interactable = false;
-            artilleryButton.interactable = false;
-            defenderButton.interactable = false;
-            transportButton.interactable = false;
         }
 
         if (!player.CanBuildUnit(UnitType.Infantry))
@@ -80,6 +70,15 @@ public class BuildingPanel : MonoBehaviour
     private void SetUnitLabel(UnitType type)
     {
         
+    }
+    private void SetInteractive(bool flag)
+    {
+        infantryButton.interactable = flag;
+        heavyButton.interactable = flag;
+        scoutButton.interactable = flag;
+        artilleryButton.interactable = flag;
+        defenderButton.interactable = flag;
+        transportButton.interactable = flag;
     }
 
     private void BuildListener(Factory factory, UnitType type)

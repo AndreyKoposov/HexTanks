@@ -264,6 +264,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1184870503}
     m_Modifications:
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[0]
+      value: 
+      objectReference: {fileID: 758688923}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[1]
+      value: 
+      objectReference: {fileID: 589185279}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[2]
+      value: 
+      objectReference: {fileID: 1826902385}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[3]
+      value: 
+      objectReference: {fileID: 2104387801}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[4]
+      value: 
+      objectReference: {fileID: 1542393181}
+    - target: {fileID: 420812651847860653, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
+      propertyPath: territoryInit.Array.data[5]
+      value: 
+      objectReference: {fileID: 853227521}
     - target: {fileID: 3340178918337209749, guid: 5c2dd7efceaa25b438ba20bb0cb25894, type: 3}
       propertyPath: m_Name
       value: PlasmMine

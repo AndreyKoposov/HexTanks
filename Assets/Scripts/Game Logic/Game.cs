@@ -43,7 +43,7 @@ public class Game : MonoBehaviour
         get => Instance.fabric;
     }
 
-    public static Team CurrentPlayer
+    public static Team CurrentTeam
     {
         get => Instance.team;
     }
@@ -58,6 +58,11 @@ public class Game : MonoBehaviour
 
         if (team == Team.Player)
             NextTurn();
+    }
+
+    public static PlayerData GetPlayer(Team team)
+    {
+        return team == Team.Player ? Player : Enemy;
     }
 
     private void NextTurn()

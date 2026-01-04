@@ -536,7 +536,7 @@ GameObject:
   - component: {fileID: 5454059488211740895}
   - component: {fileID: 5876322325271553004}
   - component: {fileID: 129818476863395457}
-  - component: {fileID: 5048236297393002499}
+  - component: {fileID: 420812651847860653}
   m_Layer: 0
   m_Name: PlasmMine
   m_TagString: Untagged
@@ -621,7 +621,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &5048236297393002499
+--- !u!114 &420812651847860653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -630,7 +630,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3340178918337209749}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: af0d11219d4aa8843a0fae86f86991f3, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b8ba88e8adaade4aa748041e7119dd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   territoryInit: []

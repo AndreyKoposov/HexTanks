@@ -17,10 +17,12 @@ public class A_Star
         }
     }
 
-    public static List<VectorHex> FindShortestPath(VectorHex from, VectorHex to, int maxIterations = 1000)
+    public static List<VectorHex> FindShortestPath(VectorHex from, VectorHex to, int maxIterations = 1000, Predicate<HexTile> isWalkable=null)
     {
         if (from == to)
             throw new HexTankException("From equals To");
+
+        isWalkable ??= _ => true;
 
         var openSet = new SortedSet<Node>();
         var closedSet = new HashSet<VectorHex>();
@@ -53,7 +55,7 @@ public class A_Star
             foreach (var neighbourPos in nextNode.position.Neighbours)
             {
                 if (closedSet.Contains(neighbourPos)) continue;
-                if (Game.Grid[neighbourPos].IsObstacle) continue;
+                if (!isWalkable(Game.Grid[neighbourPos])) continue;
 
                 if (!nodeCache.TryGetValue(neighbourPos, out var neighbourNode))
                 {

@@ -224,7 +224,7 @@ public class Unit : MonoBehaviour
     }
     protected virtual List<VectorHex> FindPath(VectorHex from, VectorHex to)
     {
-        return A_Star.FindShortestPath(from, to);
+        return A_Star.FindShortestPath(from, to, 1000, CanMoveThroughTile);
     }
     protected virtual void SetTeam(Team team)
     {

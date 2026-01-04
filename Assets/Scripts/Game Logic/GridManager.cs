@@ -92,7 +92,7 @@ public class GridManager : MonoBehaviour
     {
         List<VectorHex> result = new();
 
-        if (Game.CurrentPlayer != unit.Team)
+        if (Game.CurrentTeam != unit.Team)
             return result;
         if (!unit.CanMove)
             return result;
@@ -114,7 +114,7 @@ public class GridManager : MonoBehaviour
 
         Unit unit = map[position].Unit;
 
-        if (Game.CurrentPlayer != unit.Team)
+        if (Game.CurrentTeam != unit.Team)
             return result;
         if (!unit.CanAttack)
             return result;

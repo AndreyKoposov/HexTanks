@@ -37,7 +37,7 @@ public class MouseInteract : MonoBehaviour
         CheckHover();
         CheckClick();
 
-        Team team = Game.CurrentPlayer;
+        Team team = Game.CurrentTeam;
 
         if (HoverExist && Input.GetKeyDown(KeyCode.Alpha1))
             Game.Fabric.CreateUnitAt(hoveredTile, UnitType.Infantry, team);

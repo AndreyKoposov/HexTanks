@@ -14,7 +14,7 @@ public class TurnPanel : MonoBehaviour
     private void Start()
     {
         SetTurnLabel(1);
-        SetPlayerLabel(Game.CurrentPlayer);
+        SetPlayerLabel(Game.CurrentTeam);
     }
 
     #region Events

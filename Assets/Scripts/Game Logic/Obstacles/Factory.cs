@@ -22,16 +22,18 @@ public class Factory : Building
         player.chips -= targetInfo.Chips;
         Game.UI.UpdatePlayerPanel(player);
 
-        GlobalEventManager.TurnChanged.AddListener(ProgressBuildOnTurnChanged);
+        GlobalEventManager.EndTurn.AddListener(ProgressBuildOnTurnChanged);
     }
 
     #region Events
-    private void ProgressBuildOnTurnChanged(int _)
+    private void ProgressBuildOnTurnChanged(Team nextPlayer)
     {
+        if (state == nextPlayer) return;
+
         PlayerData player = state == Team.Player ? Game.Player : Game.Enemy;
         if (player.unitsHas >= player.unitsMax)
         {
-            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            GlobalEventManager.EndTurn.RemoveListener(ProgressBuildOnTurnChanged);
             var targetInfo = Game.Fabric.GetInfoByType(unitToBuild);
 
             player.plasm += targetInfo.Plasm;
@@ -48,7 +50,7 @@ public class Factory : Building
         {
             Game.Fabric.CreateUnitAt(position, unitToBuild, state);
 
-            GlobalEventManager.TurnChanged.RemoveListener(ProgressBuildOnTurnChanged);
+            GlobalEventManager.EndTurn.RemoveListener(ProgressBuildOnTurnChanged);
         }
     }
     #endregion
